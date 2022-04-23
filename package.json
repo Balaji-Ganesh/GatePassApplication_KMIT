@@ -11,7 +11,6 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "heroku-postbuild": "cd client && npm install && npm run build",
     "start": "node index.js",
     "devStart": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
