@@ -61,7 +61,9 @@ router.put("/:id", async (request, response) => {
     );
     response
       .status(401)
-      .json("You can't update/edit someone else's permission. Insufficient rights.");
+      .json(
+        "You can't update/edit someone else's permission. Insufficient rights."
+      );
   }
 });
 
@@ -102,16 +104,27 @@ router.delete("/:id", async (request, response) => {
 
 // GET..
 router.get("/:id", async (request, response) => {
+  console.info(
+    `[INFO] Received GET request to retrieve permission of id: ${request.params.id}`
+  );
   try {
-    const permission = await Permission.findById(request.params.id);                // to search based on _id of mongodb
+    const permission = await Permission.findById(request.params.id); // to search based on _id of mongodb
     // const permission = await Permission.find({"studentId":request.params.id})    // uncomment this, if to search via roll no
-    // if (permission != null) {
-    console.log("[SUCCESS] Permission retrieved successfully.");
-    response.status(200).json(permission);
-    //   } else {
-    //       console.warn("[WARNING] Trying to access invalid permission or a deleted permission.");
-    //       response.status(500).json("Please re-check the permission-id,  \n Detailed Error: "+error)
-    //   }
+    if (permission != null) {
+      console.log(
+        `[SUCCESS] Permission retrieved successfully. Response: ${permission}`
+      );
+      response.status(200).json(permission);
+    } else {
+      console.warn(
+        "[WARNING] Trying to access invalid permission or a deleted permission."
+      );
+      response
+        .status(500)
+        .json(
+          "Please re-check the permission-id,  \n Detailed Error: " + error
+        );
+    }
   } catch (error) {
     console.error("[ERROR] Permission retrieval failed.\nError: " + error);
     response
