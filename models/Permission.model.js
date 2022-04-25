@@ -13,11 +13,11 @@ const PermissionSchema = new mongoose.Schema(
       required: true,
     },
     passMode: {
-      type: Boolean,
+      type: Number,
       required: true,
     },
     permissionStatus: {
-      type: Boolean,
+      type: Number,
       required: true,
     },
     facultyId: {

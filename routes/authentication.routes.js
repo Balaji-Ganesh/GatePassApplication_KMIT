@@ -3,34 +3,6 @@ const User = require("../models/User.model");
 const bcrypt = require("bcrypt");
 const { route } = require("express/lib/application");
 
-// Registration.. <- will happen through postman for creation of new users.
-router.post("/registration", async (request, response) => {
-  try {
-    /*---------------------------------- Registering a new user--------------------------------- */
-    // Generate the hashed password -- Security concern..
-    const saltRounds = 10; // Tune it according, as per requirement.
-    console.log(request.body);
-    const hashedPwd = await bcrypt.hash(request.body.password, saltRounds);
-    // Go for creation of the new user..
-    const newUser = new User({
-      id: request.body.id,
-      password: hashedPwd,
-      name: request.body.name,
-      role: request.body.role,
-      profilePicture: "", // currently no use. May be in future.
-    });
-
-    // Save the new user..
-    const user = await newUser.save();
-    // After successful save..!!
-    response.status(200).json(user);
-    console.log("[SUCCESS] New user has successfully REGISTERED.");
-  } catch (error) {
-    response.status(500).json(error);
-    console.log("[ERROR] New user Registration failed. Desc: " + error);
-  }
-});
-
 // Login..
 router.post("/login", async (request, response) => {
   try {
