@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import MaterialTable from "material-table";
 import ShowResponse from "./ShowResponse";
+import Button from "@material-ui/core/Button";
+import GetAppRoundedIcon from "@material-ui/icons/GetAppRounded";
+import { LocalConvenienceStoreOutlined } from "@material-ui/icons";
 
 function FetchPermissions() {
-  const api_url = "http://localhost:4000/api/permission/";
+  const api_url = "http://localhost:4000/api/permission/"; // for local testing..
+  //    const api_url = "https://gatepassapplication.herokuapp.com/api/permission/"; /// for deployment..
   const [data, setData] = useState([]);
   // for snack bar -- showing status to the user..
   const [showSnackBar, setShowSnackBar] = useState(false);
@@ -31,7 +35,7 @@ function FetchPermissions() {
       // permission status
       if (permissionStatus === 0) permissionStatus = "Denied";
       else if (permissionStatus === 1) permissionStatus = "Granted";
-      else if (permissionStatus == -1) permissionStatus = "Used Out"; // After student uses the permission..
+      else if (permissionStatus === -1) permissionStatus = "Used Out"; // After student uses the permission..
 
       // date..
       let d = new Date(grantedAt);
@@ -39,7 +43,7 @@ function FetchPermissions() {
       grantedAt = new Date(grantedAt).toLocaleString();
 
       // pass mode
-      if (passMode == 0) passMode = "Lunch Pass";
+      if (passMode === 0) passMode = "Lunch Pass";
       else passMode = "Gate Pass";
 
       // Place back..
@@ -56,7 +60,7 @@ function FetchPermissions() {
     return obj;
   }
 
-  useEffect(() => {
+  function fetchPermissions() {
     fetch(api_url)
       .then((response) => response.json()) //cvt to JSON
       // .then((response) => console.log(response))
@@ -77,7 +81,12 @@ function FetchPermissions() {
           "Network Error: Unable to fetch data"
         );
       });
+  }
+
+  useEffect(() => {
+    fetchPermissions();
   }, []);
+
   const columns = [
     { title: "Student ID", field: "studentId" },
     { title: "Reason", field: "reason" },
@@ -88,9 +97,86 @@ function FetchPermissions() {
     // profile picture, in next version...
   ];
 
+  function downloadLogs() {
+    console.log("Starting download logs");
+    function ConvertToCSV(objArray) {
+      var array = typeof objArray != "object" ? JSON.parse(objArray) : objArray;
+      var str = "";
+
+      for (var i = 0; i < array.length; i++) {
+        var line = "";
+        for (var index in array[i]) {
+          // for (let j = 0; j < array[i].length; j++) {
+          if (line != "") line += ",";
+
+          line += array[i][index];
+        }
+        console.log("Generated: ", line);
+        str += line + "\r\n";
+      }
+
+      return str;
+    }
+    const dataCSV = `name, email
+        ABC, 123@12.com
+        2312, 43@er.com
+
+        Summary
+        Users allowed: 2
+        Users pending: 0
+    `;
+    // function downloadFile(
+    //   obj,
+    //   name = "Log_on_" +
+    //     new Date()
+    //       .toLocaleString()
+    //       .toString()
+    //       .replaceAll(" ", "")
+    //       .replaceAll("/", "_")
+    //       .replace(",", "__") +
+    //     ".csv"
+    // ) {
+    // Generate CSV type data..
+    // first row:  Get all the keys..
+    // console.log("obj printing: ", JSON.stringify(data));
+    // const downloadData = ({ ["tableData"]: tableData, ...data } = data);
+    // console.log(downloadData);
+    console.log(ConvertToCSV(data));
+    // Create a blob inside the local memory..
+    // const blob = new Blob([data], { type: "octet-stream" });
+
+    // // create url to it..
+    // const href = URL.createObjectURL(blob);
+
+    // const a = Object.assign(document.createElement("a"), {
+    //   href,
+    //   style: "display:none",
+    //   download: name,
+    // });
+
+    // a.click(); // trigger download..
+
+    // // Clean up..
+    // URL.revokeObjectURL(href);
+    // a.remove();
+    // }
+  }
   return (
     <div className="App">
       <h4 align="center">Permissions taken on this day</h4>
+      <Button
+        variant="outlined"
+        color="default"
+        // className={classes.button}
+        startIcon={<GetAppRoundedIcon />}
+        gutterBottom
+        onClick={() => {
+          downloadLogs();
+          // alert(new Date().toTimeString().toString())
+        }}
+      >
+        Take Logs for today
+      </Button>
       <MaterialTable
         title="Permissions"
         data={data}

@@ -7,7 +7,9 @@ import ShowResponse from "./ShowResponse";
 const timeDelay = 1000;
 
 function FetchUsers() {
-  const api_url = "http://localhost:4000/api/users/";
+    const api_url = "http://localhost:4000/api/users/";
+  //   const api_url = "https://gatepassapplication.herokuapp.com/api/users/"; /// for deployment..
+//   const api_url = "https://gatepassapplication.herokuapp.com/api/users/";
   const [data, setData] = useState([]);
   // for snack bar -- showing status to the user..
   const [showSnackBar, setShowSnackBar] = useState(false);
@@ -22,8 +24,11 @@ function FetchUsers() {
   }
 
   useEffect(() => {
+    axios
+      .get("https://jsonplaceholder.typicode.com/users")
+      .then((response) => console.log(response));
     fetch(api_url)
-      .then((response) => response.json()) //cvt tio JSON
+      .then((response) => response.json()) //cvt to JSON
       // // .then((response) => console.log(response))
       .then((response) => {
         // console.log(response);
