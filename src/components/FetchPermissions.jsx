@@ -5,9 +5,11 @@ import Button from "@material-ui/core/Button";
 import GetAppRoundedIcon from "@material-ui/icons/GetAppRounded";
 import { LocalConvenienceStoreOutlined } from "@material-ui/icons";
 
+import axios from "axios";
+
 function FetchPermissions() {
-  const api_url = "http://localhost:4000/api/permission/"; // for local testing..
-  //    const api_url = "https://gatepassapplication.herokuapp.com/api/permission/"; /// for deployment..
+  // const api_url = "http://localhost:4000/api/permission/"; // for local testing..
+  const api_url = "https://gatepassapplication.herokuapp.com/api/permission"; /// for deployment..
   const [data, setData] = useState([]);
   // for snack bar -- showing status to the user..
   const [showSnackBar, setShowSnackBar] = useState(false);
@@ -83,8 +85,24 @@ function FetchPermissions() {
       });
   }
 
+  async function fetchPermissionsAsync() {
+    let json = await axios
+      .get("https://tutorialzine.com/misc/files/example.json")
+      .then((response) => console.log(response))
+      .catch((error) => console.log(error));
+    console.log("after the call to service", json);
+    // return json;
+  }
+
   useEffect(() => {
-    fetchPermissions();
+    // fetchPermissions(); // used for fetch..
+    // from: https://stackoverflow.com/a/53932719
+    (async () => {
+      // let abc = await getJSONAsync();
+      // await getJSONAsync();
+      await fetchPermissionsAsync();
+      // console.log(">>>>>>>>>>> abc", abc);
+    })();
   }, []);
 
   const columns = [
@@ -171,8 +189,13 @@ function FetchPermissions() {
         startIcon={<GetAppRoundedIcon />}
         gutterBottom
         onClick={() => {
-          downloadLogs();
+          // downloadLogs();
           // alert(new Date().toTimeString().toString())
+          handleSnackbarVisibility(
+            true,
+            "info",
+            "Feature in development, please wait for update."
+          );
         }}
       >
         Take Logs for today

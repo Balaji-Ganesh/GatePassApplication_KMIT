@@ -7,8 +7,8 @@ import ShowResponse from "./ShowResponse";
 const timeDelay = 1000;
 
 function FetchUsers() {
-    const api_url = "http://localhost:4000/api/users/";
-  //   const api_url = "https://gatepassapplication.herokuapp.com/api/users/"; /// for deployment..
+    // const api_url = "http://localhost:4000/api/users/";
+    const api_url = "https://gatepassapplication.herokuapp.com/api/users/"; /// for deployment..
 //   const api_url = "https://gatepassapplication.herokuapp.com/api/users/";
   const [data, setData] = useState([]);
   // for snack bar -- showing status to the user..
