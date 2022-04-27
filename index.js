@@ -11,13 +11,29 @@ const authenticationRoute = require("./routes/authentication.routes");
 const userRoute = require("./routes/users.routes");
 const permissionRoute = require("./routes/permissions.routes");
 
-/** Few configurations.. */
+/** Few configurations.. -- Setting Middlewares..*/
 const app = express(); /// Make the application to use express..
 app.use(express.json()); // For handling JSON by type..
 app.use(
   "/assets/images",
   express.static(path.join(__dirname, "/assets/images"))
 ); // to set the images folder public..
+
+// CORS.. error fix: https://www.freecodecamp.org/news/access-control-allow-origin-header-explained/
+// Add Access Control Allow Origin headers
+app.use((req, res, next) => {
+  // res.setHeader("Access-Control-Allow-Origin", "https://yoursite.com");  // to allow only for specific browser..
+  res.setHeader("Access-Control-Allow-Origin", "*"); // to allow from any browser
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+
+app.get("/api", (req, res) => {
+  res.json("Hello");
+});
 
 /** ----------------------------------- Connection to database -------------------------------- **/
 mongoose
