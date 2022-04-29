@@ -1,36 +1,13 @@
+//we create mongoose to communicate to mongoDB
 const mongoose = require("mongoose");
+const UserSchema = mongoose.Schema({
+  RollNumber: String,
+  Time: String,
+  Type: Number,
+  facultyId: String,
+  Name: String,
+});
 
-// Creating user's schema..
-const PermissionSchema = new mongoose.Schema(
-  {
-    studentId: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    reason: {
-      type: String,
-      required: true,
-    },
-    passMode: {
-      type: Number,
-      required: true,
-    },
-    permissionStatus: {
-      type: Number,
-      required: true,
-    },
-    facultyId: {
-      type: String,
-      required: true,
-    },
-    grantedAt: {
-      type: Date,
-      required: true,
-    },
-  },
-  { timestamps: true }
-);
+const User = mongoose.model("User", UserSchema);
 
-// Export the model..
-module.exports = mongoose.model("Permission", PermissionSchema);
+module.exports = User;

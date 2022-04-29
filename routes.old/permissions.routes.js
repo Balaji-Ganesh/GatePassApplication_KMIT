@@ -1,6 +1,6 @@
 // take reference from posts.js in api
 const router = require("express").Router();
-const Permission = require("../models/Permission.model");
+const Permission = require("../models.old/Permission.model");
 
 // Creation of a new permission..
 router.post("/", async (request, response) => {
