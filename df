@@ -1,0 +1,41 @@
+[33mcommit b5dbec4688aa762ad898f4accbe43b19433ca4b9[m[33m ([m[1;36mHEAD -> [m[1;32mnodeJS-backend_v1.1[m[33m, [m[1;31morigin/nodeJS-backend_v1.1[m[33m)[m
+Author: Balaji-Ganesh <balganeshboda27@gmail.com>
+Date:   Fri Apr 29 08:17:00 2022 +0530
+
+    API changes acc. to Shiva's Schema design
+
+[33mcommit e84ff6f5e0ad2cda75be0aa9033f7c289bc7cc70[m
+Author: Balaji-Ganesh <balganeshboda27@gmail.com>
+Date:   Wed Apr 27 22:44:52 2022 +0530
+
+    FIX: CORS error from dashboard
+
+[33mcommit cb8b8869aa626c118aa6865a25e8639e7cda5a30[m
+Author: Balaji-Ganesh <balganeshboda27@gmail.com>
+Date:   Mon Apr 25 18:09:05 2022 +0530
+
+    Modifed & added few routes for Dashboard
+
+[33mcommit e7c8d6aaa85612c7209732dc4b9409acacf35541[m
+Author: Balaji-Ganesh <balganeshboda27@gmail.com>
+Date:   Mon Apr 25 12:04:08 2022 +0530
+
+    Added features of deleting and updating details of users
+
+[33mcommit aad684121a9ac3b4a2c0d3b5a14bb9d9e0c22446[m
+Author: Balaji-Ganesh <balganeshboda27@gmail.com>
+Date:   Sun Apr 24 07:18:26 2022 +0530
+
+    modified permissions.js
+
+[33mcommit db7439263f7fb4b5f1f9c122ccde1a9fbea0dad9[m
+Author: Balaji-Ganesh <balganeshboda27@gmail.com>
+Date:   Sat Apr 23 22:44:46 2022 +0530
+
+    config edit
+
+[33mcommit 79c4cd94385f4947573bb0aed52cbb771b7e2f07[m
+Author: Balaji-Ganesh <balganeshboda27@gmail.com>
+Date:   Sat Apr 23 22:40:55 2022 +0530
+
+    try_1
