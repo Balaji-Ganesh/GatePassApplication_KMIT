@@ -7,10 +7,11 @@ import Grid from "@material-ui/core/Grid";
 
 import FetchPermissions from "./FetchPermissions";
 import FetchUsers from "./FetchUsers";
+import SignIn from "./SignIn";
 
 function DashBoard() {
   const [viewUsers, setViewUsers] = useState(true);
-
+  
   function handleChange(event, value) {
     if (value === "permissions") setViewUsers(() => false);
     if (value === "users") setViewUsers(() => true);
@@ -18,7 +19,6 @@ function DashBoard() {
 
   return (
     <div>
-      {/* <div className={classes.heroButtons}> */}
       <div>
         <Grid container spacing={2} justifyContent="center">
           <Grid item>
@@ -37,10 +37,14 @@ function DashBoard() {
           </Grid>
         </Grid>
       </div>
-
       {viewUsers ? <FetchUsers /> : <FetchPermissions />}
     </div>
   );
 }
 
 export default DashBoard;
+
+/**
+ *
+ *
+ */

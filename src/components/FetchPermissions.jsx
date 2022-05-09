@@ -9,7 +9,8 @@ import axios from "axios";
 
 function FetchPermissions() {
   // const api_url = "http://localhost:4000/api/permission/"; // for local testing..
-  const api_url = "https://gatepassapplication.herokuapp.com/api/permission"; /// for deployment..
+  const api_url = "http://localhost:4000/permissions/"; // as per common API of Shiva and Ganesh
+  // const api_url = "https://gatepassapplication.herokuapp.com/api/permission"; /// for deployment..
   const [data, setData] = useState([]);
   // for snack bar -- showing status to the user..
   const [showSnackBar, setShowSnackBar] = useState(false);
@@ -85,24 +86,24 @@ function FetchPermissions() {
       });
   }
 
-  async function fetchPermissionsAsync() {
-    let json = await axios
-      .get("https://tutorialzine.com/misc/files/example.json")
-      .then((response) => console.log(response))
-      .catch((error) => console.log(error));
-    console.log("after the call to service", json);
-    // return json;
-  }
+  // async function fetchPermissionsAsync() {
+  //   let json = await axios
+  //     .get("https://tutorialzine.com/misc/files/example.json")
+  //     .then((response) => console.log(response))
+  //     .catch((error) => console.log(error));
+  //   console.log("after the call to service", json);
+  //   // return json;
+  // }
 
   useEffect(() => {
-    // fetchPermissions(); // used for fetch..
+    fetchPermissions(); // used for fetch..
     // from: https://stackoverflow.com/a/53932719
-    (async () => {
-      // let abc = await getJSONAsync();
-      // await getJSONAsync();
-      await fetchPermissionsAsync();
-      // console.log(">>>>>>>>>>> abc", abc);
-    })();
+    // (async () => {
+    //   // let abc = await getJSONAsync();
+    //   // await getJSONAsync();
+    //   await fetchPermissionsAsync();
+    //   // console.log(">>>>>>>>>>> abc", abc);
+    // })();
   }, []);
 
   const columns = [

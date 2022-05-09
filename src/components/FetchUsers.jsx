@@ -7,9 +7,10 @@ import ShowResponse from "./ShowResponse";
 const timeDelay = 1000;
 
 function FetchUsers() {
-    // const api_url = "http://localhost:4000/api/users/";
-    const api_url = "https://gatepassapplication.herokuapp.com/api/users/"; /// for deployment..
-//   const api_url = "https://gatepassapplication.herokuapp.com/api/users/";
+  // const api_url = "http://localhost:4000/api/users/"; // as per old API
+  const api_url = "http://localhost:4000/api/Details/";   // as per common API of Shiva and Ganesh
+  // const api_url = "https://gatepassapplication.herokuapp.com/api/users/"; /// for deployment..
+  //   const api_url = "https://gatepassapplication.herokuapp.com/api/users/";
   const [data, setData] = useState([]);
   // for snack bar -- showing status to the user..
   const [showSnackBar, setShowSnackBar] = useState(false);
@@ -24,14 +25,17 @@ function FetchUsers() {
   }
 
   useEffect(() => {
-    axios
-      .get("https://jsonplaceholder.typicode.com/users")
-      .then((response) => console.log(response));
+    // axios
+    //   // .get("https://jsonplaceholder.typicode.com/users")
+    //   .get(api_url)
+    //   .then((response) => console.log(JSON.parse(response.data)))
+    //   // .then((response) => console.log(JSON.parse(response)))
+    //   .catch((error) => console.log(error));
     fetch(api_url)
       .then((response) => response.json()) //cvt to JSON
       // // .then((response) => console.log(response))
       .then((response) => {
-        // console.log(response);
+        console.log(response);
         setData(response);
         handleSnackbarVisibility(true, "info", "Data fetched");
       })
@@ -46,8 +50,8 @@ function FetchUsers() {
   }, []);
 
   const columns = [
-    { title: "Unique ID", field: "id" },
-    { title: "Name", field: "name" },
+    // { title: "Unique ID", field: "_id" },
+    { title: "Name", field: "Name" },
     { title: "Role", field: "role" },
     // profile picture, in next version...
   ];
@@ -117,7 +121,7 @@ function FetchUsers() {
                     handleSnackbarVisibility(
                       true,
                       "error",
-                      "User Deletion failed"
+                      "User Deletion failed due to: " + error
                     );
                   });
 
@@ -152,7 +156,7 @@ function FetchUsers() {
                     handleSnackbarVisibility(
                       true,
                       "error",
-                      "Row updation failed"
+                      "Row updation failed due to:" + error
                     );
                   });
                 resolve();
