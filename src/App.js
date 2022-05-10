@@ -1,10 +1,21 @@
 import React, { useState } from "react";
 import SignIn from "./components/SignIn";
 import DashboardWrapper from "./components/DashboardWrapper";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
   const [signInSuccess, setSignInSuccess] = useState(true); /// set to true, to test signIn..
-  return <>{signInSuccess ? <DashboardWrapper /> : <SignIn />}</>;
+  return (
+    <>
+      {/* <Router>
+        <Routes>
+          <Route exact path="/" component={SignIn} />
+          <Route path="/dashboard" component={DashboardWrapper} />
+        </Routes>
+      </Router> */}
+      {signInSuccess ? <DashboardWrapper /> : <SignIn />}
+    </>
+  );
 }
 
 export default App;

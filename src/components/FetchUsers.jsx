@@ -8,7 +8,7 @@ const timeDelay = 1000;
 
 function FetchUsers() {
   // const api_url = "http://localhost:4000/api/users/"; // as per old API
-  const api_url = "http://localhost:4000/api/Details/";   // as per common API of Shiva and Ganesh
+  const api_url = "https://securitygaurd.herokuapp.com/api/Details/"; // as per common API of Shiva and Ganesh
   // const api_url = "https://gatepassapplication.herokuapp.com/api/users/"; /// for deployment..
   //   const api_url = "https://gatepassapplication.herokuapp.com/api/users/";
   const [data, setData] = useState([]);
@@ -51,8 +51,38 @@ function FetchUsers() {
 
   const columns = [
     // { title: "Unique ID", field: "_id" },
-    { title: "Name", field: "Name" },
-    { title: "Role", field: "role" },
+    {
+      title: "Name",
+      field: "Name",
+      validate: (rowData) => {
+        if (rowData.Name === undefined || rowData.Name === "")
+          return "Required";
+        else if (rowData.Name.length < 3)
+          return "Name should be atleast 3 characters";
+        // for success cases..
+        return true;
+      },
+    },
+    {
+      title: "Role",
+      field: "role",
+      lookup: {
+        // In next update, encode these(keys) into numerics, so can save space and bandwidth.
+        Student: "Student",
+        Teacher: "Teacher",
+        GateKeeper: "GateKeeper",
+      },
+      validate: (rowData) => {
+        if (rowData.role === undefined) return "Assign a role";
+        // else if ( // not required as changed to lookups (dropdown)
+        //   rowData.role == "Student" ||
+        //   rowData.role == "Teacher" ||
+        //   rowData.role == "GateKeeper"
+        // )
+        return true;
+        // return "Should either be 'Student', 'Teacher' or 'GateKeeper' (Case-Sensitive)";
+      },
+    },
     // profile picture, in next version...
   ];
 

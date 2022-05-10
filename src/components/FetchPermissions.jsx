@@ -9,7 +9,7 @@ import axios from "axios";
 
 function FetchPermissions() {
   // const api_url = "http://localhost:4000/api/permission/"; // for local testing..
-  const api_url = "http://localhost:4000/permissions/"; // as per common API of Shiva and Ganesh
+  const api_url = "https://securitygaurd.herokuapp.com/permissions/"; // as per common API of Shiva and Ganesh
   // const api_url = "https://gatepassapplication.herokuapp.com/api/permission"; /// for deployment..
   const [data, setData] = useState([]);
   // for snack bar -- showing status to the user..
@@ -27,23 +27,16 @@ function FetchPermissions() {
   function polishResponse(obj) {
     for (let i = 0; i < Object.keys(obj).length; i++) {
       // filter out..
-      let {
-        facultyId,
-        passMode,
-        permissionStatus,
-        reason,
-        studentId,
-        grantedAt,
-      } = obj[i];
+      let { Name, passMode, Type, reason, RollNumber, createdAt } = obj[i];
       // permission status
-      if (permissionStatus === 0) permissionStatus = "Denied";
-      else if (permissionStatus === 1) permissionStatus = "Granted";
-      else if (permissionStatus === -1) permissionStatus = "Used Out"; // After student uses the permission..
+      // if (Type === 0) Type = "Lunch Pass";
+      // else if (Type === 1) Type = "Gate Pass";
+      // else if (Type === -1) Type = "Expired Permission"; // After student uses the permission..
 
       // date..
-      let d = new Date(grantedAt);
+      let d = new Date(createdAt);
       console.log("date: ", d.toLocaleString());
-      grantedAt = new Date(grantedAt).toLocaleString();
+      createdAt = new Date(createdAt).toLocaleString();
 
       // pass mode
       if (passMode === 0) passMode = "Lunch Pass";
@@ -51,13 +44,14 @@ function FetchPermissions() {
 
       // Place back..
       obj[i] = {
-        studentId: studentId,
-        facultyId: facultyId,
-        grantedAt: grantedAt,
+        RollNumber: RollNumber,
+        Name: Name,
+        createdAt: createdAt,
         passMode: passMode,
-        permissionStatus: permissionStatus,
+        Type: Type,
         reason: reason,
       };
+      // console.log("REASONNNNNNNNNNNNNNNN: " + reason);
     }
     //console.log("in polish work..", obj);
     return obj;
@@ -107,12 +101,16 @@ function FetchPermissions() {
   }, []);
 
   const columns = [
-    { title: "Student ID", field: "studentId" },
+    { title: "Student ID", field: "RollNumber" },
     { title: "Reason", field: "reason" },
     { title: "Pass Mode", field: "passMode" },
-    { title: "Permission Status", field: "permissionStatus" },
-    { title: "Granted by Faculty(ID)", field: "facultyId" },
-    { title: "Granted At", field: "grantedAt" },
+    {
+      title: "Permission Status",
+      field: "Type",
+      lookup: { 0: "Lunch Pass", 1: "Gate Pass", "-1": "Pass Expired" },
+    },
+    { title: "Granted by Faculty(ID)", field: "Name" },
+    { title: "Granted At", field: "createdAt" },
     // profile picture, in next version...
   ];
 

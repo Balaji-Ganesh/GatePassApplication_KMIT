@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -14,6 +14,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 
 import axios from "axios";
+// import { useNavigate } from "react-router-dom";
+// const navigate = useNavigate();
 
 function Copyright() {
   return (
@@ -52,12 +54,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignIn() {
+  const [signInSuccess, setSignInSuccess] = useState(false);
+
   function handleSubmit(e) {
     e.preventDefault();
     var uniqueId = document.getElementById("uniqueId").value;
     var password = document.getElementById("pwd").value;
     console.log(uniqueId, password);
-    const api_url = "http://localhost:4000/api/authenticate";
+    // const api_url = "http://localhost:4000/api/authenticate";
+    const api_url = "https://securitygaurd.herokuapp.com/api/authenticate/";
 
     const data = {
       Name: uniqueId,
@@ -67,6 +72,11 @@ export default function SignIn() {
       .post(api_url, data)
       .then((response) => {
         console.log(response);
+        if (response.status == 200) setSignInSuccess(true);
+        else {
+          console.log("Incorrect details");
+          setSignInSuccess(false);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -75,54 +85,58 @@ export default function SignIn() {
   const classes = useStyles();
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <form className={classes.form}>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="uniqueId"
-            type="text"
-            label="Unique ID"
-            name="uniqueId"
-            autoComplete="email"
-            autoFocus
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="pwd"
-            autoComplete="current-password"
-          />
-          {/* <FormControlLabel
+    <>
+      {/* {signInSuccess ? (
+        () => navigate("/dashboard")
+      ) : ( */}
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <form className={classes.form}>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="uniqueId"
+              type="text"
+              label="Username"
+              name="uniqueId"
+              autoComplete="email"
+              autoFocus
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="pwd"
+              autoComplete="current-password"
+            />
+            {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           /> */}
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            onClick={handleSubmit}
-          >
-            Sign In
-          </Button>
-          {/* <Grid container>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              onClick={handleSubmit}
+            >
+              Sign In
+            </Button>
+            {/* <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">
                 Forgot password?
@@ -134,11 +148,13 @@ export default function SignIn() {
               </Link>
             </Grid>
           </Grid> */}
-        </form>
-      </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
-    </Container>
+          </form>
+        </div>
+        <Box mt={8}>
+          <Copyright />
+        </Box>
+      </Container>
+      {/* // } */}
+    </>
   );
 }
