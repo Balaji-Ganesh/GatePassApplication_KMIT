@@ -74,7 +74,7 @@ function FetchPermissions() {
         response = polishResponse(response);
         console.log("After polishing: ", response);
         setData(response);
-        handleSnackbarVisibility(true, "info", "Data fetched");
+        handleSnackbarVisibility(true, "info", "Data fetched successfully.!");
       })
       .catch((error) => {
         // console.log("Unable to fetch data" + error);

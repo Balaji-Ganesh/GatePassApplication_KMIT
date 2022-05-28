@@ -36,6 +36,10 @@ function FetchUsers() {
       // // .then((response) => console.log(response))
       .then((response) => {
         console.log(response);
+        response.sort((a, b)=>{
+          return new Date(b.createdAt) - new Date(a.createdAt)  // sorting DSEC
+        })
+        
         setData(response);
         handleSnackbarVisibility(true, "info", "Data fetched successfully");
       })
