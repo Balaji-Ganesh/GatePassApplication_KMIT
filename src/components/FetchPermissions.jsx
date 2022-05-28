@@ -25,6 +25,12 @@ function FetchPermissions() {
   }
 
   function polishResponse(obj) {
+    // sort the objects based on the permission time (in DESC, so recent permissions will be on head)
+    obj.sort((a, b) => {
+      return new Date(b.createdAt) - new Date(a.createdAt); /// sort DESC
+    });
+
+    // perform polishing..
     for (let i = 0; i < Object.keys(obj).length; i++) {
       // filter out..
       let { Name, passMode, Type, reason, RollNumber, createdAt } = obj[i];
@@ -39,15 +45,15 @@ function FetchPermissions() {
       createdAt = new Date(createdAt).toLocaleString();
 
       // pass mode
-      if (passMode === 0) passMode = "Lunch Pass";
-      else passMode = "Gate Pass";
+      // if (passMode === 0) passMode = "Lunch Pass";
+      // else if (passMode === 1) passMode = "Gate Pass";
 
       // Place back..
       obj[i] = {
         RollNumber: RollNumber,
         Name: Name,
         createdAt: createdAt,
-        passMode: passMode,
+        // passMode: passMode,
         Type: Type,
         reason: reason,
       };
@@ -103,7 +109,7 @@ function FetchPermissions() {
   const columns = [
     { title: "Student ID", field: "RollNumber" },
     { title: "Reason", field: "reason" },
-    { title: "Pass Mode", field: "passMode" },
+    // { title: "Pass Mode", field: "passMode" },
     {
       title: "Permission Status",
       field: "Type",
