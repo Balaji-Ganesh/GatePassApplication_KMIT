@@ -29,9 +29,9 @@ function FetchPermissions() {
       // filter out..
       let { Name, passMode, Type, reason, RollNumber, createdAt } = obj[i];
       // permission status
-      // if (Type === 0) Type = "Lunch Pass";
-      // else if (Type === 1) Type = "Gate Pass";
-      // else if (Type === -1) Type = "Expired Permission"; // After student uses the permission..
+      if (Type === 0) Type = "Lunch Pass";
+      else if (Type === 1) Type = "Gate Pass";
+      else if (Type === -1) Type = "Permission Expired"; // After student uses the permission..
 
       // date..
       let d = new Date(createdAt);
@@ -107,7 +107,7 @@ function FetchPermissions() {
     {
       title: "Permission Status",
       field: "Type",
-      lookup: { 0: "Lunch Pass", 1: "Gate Pass", "-1": "Pass Expired" },
+      // lookup: { 0: "Lunch Pass", 1: "Gate Pass", "-1": "Pass Expired" },
     },
     { title: "Granted by Faculty(ID)", field: "Name" },
     { title: "Granted At", field: "createdAt" },
