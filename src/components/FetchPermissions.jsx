@@ -3,6 +3,8 @@ import MaterialTable from "material-table";
 import ShowResponse from "./ShowResponse";
 import Button from "@material-ui/core/Button";
 import GetAppRoundedIcon from "@material-ui/icons/GetAppRounded";
+import IconButton from "@material-ui/core/IconButton";
+import Tooltip from "@material-ui/core/Tooltip";
 import { LocalConvenienceStoreOutlined } from "@material-ui/icons";
 
 import axios from "axios";
@@ -63,7 +65,7 @@ function FetchPermissions() {
     return obj;
   }
 
-  function fetchPermissions() {
+  function fetchPermissions(code) {
     fetch(api_url)
       .then((response) => response.json()) //cvt to JSON
       // .then((response) => console.log(response))
@@ -74,7 +76,10 @@ function FetchPermissions() {
         response = polishResponse(response);
         console.log("After polishing: ", response);
         setData(response);
-        handleSnackbarVisibility(true, "info", "Data fetched successfully.!");
+        if(code==="fresh")
+          handleSnackbarVisibility(true, "info", "Data fetched successfully.!");
+        else if(code==="refresh")
+          handleSnackbarVisibility(true, "info", "Data refreshed successfully.!");
       })
       .catch((error) => {
         // console.log("Unable to fetch data" + error);
@@ -96,7 +101,7 @@ function FetchPermissions() {
   // }
 
   useEffect(() => {
-    fetchPermissions(); // used for fetch..
+    fetchPermissions("fresh"); // used for fetch..
     // from: https://stackoverflow.com/a/53932719
     // (async () => {
     //   // let abc = await getJSONAsync();
@@ -186,7 +191,24 @@ function FetchPermissions() {
   }
   return (
     <div className="App">
-      <h4 align="center">Permissions taken on this day</h4>
+      <div align="center">
+        <h4 style={{ display: "inline" }} align="center">
+          Permissions taken on this day
+        </h4>
+        <div style={{ padding: "0px 10px", flex: "row", display: "inline" }}>
+          <Tooltip title="Refresh data">
+            <IconButton
+              aria-label="refresh"
+              // className={classes.margin}
+              size="medium"
+              onClick={() => fetchPermissions("refresh")}
+            >
+              <i class="fa-solid fa-arrows-rotate"></i>
+            </IconButton>
+          </Tooltip>
+        </div>
+      </div>
+
       <Button
         variant="outlined"
         color="default"
@@ -226,7 +248,8 @@ function FetchPermissions() {
             actions: "Actions",
           },
           body: {
-            emptyDataSourceMessage: "No records to display or please try filtering with proper keyowords.",
+            emptyDataSourceMessage:
+              "No records to display or please try filtering with proper keyowords.",
             filterRow: {
               filterTooltip: "Filter",
             },
