@@ -66,21 +66,21 @@ function FetchUsers() {
     {
       title: "Role",
       field: "role",
-      lookup: {
-        // In next update, encode these(keys) into numerics, so can save space and bandwidth.
-        Student: "Student",
-        Teacher: "Teacher",
-        GateKeeper: "GateKeeper",
-      },
+      // lookup: {
+      //   // In next update, encode these(keys) into numerics, so can save space and bandwidth.
+      //   Student: "Student",
+      //   Teacher: "Teacher",
+      //   GateKeeper: "GateKeeper",
+      // },
       validate: (rowData) => {
         if (rowData.role === undefined) return "Assign a role";
-        // else if ( // not required as changed to lookups (dropdown)
-        //   rowData.role == "Student" ||
-        //   rowData.role == "Teacher" ||
-        //   rowData.role == "GateKeeper"
-        // )
-        return true;
-        // return "Should either be 'Student', 'Teacher' or 'GateKeeper' (Case-Sensitive)";
+        else if ( // not required as changed to lookups (dropdown)
+          rowData.role == "Student" ||
+          rowData.role == "Teacher" ||
+          rowData.role == "GateKeeper"
+        )
+          return true;
+        return "Should either be 'Student', 'Teacher' or 'GateKeeper' (Case-Sensitive)";
       },
     },
     // profile picture, in next version...
