@@ -73,7 +73,7 @@ function FetchUsers() {
       //   GateKeeper: "GateKeeper",
       // },
       validate: (rowData) => {
-        if (rowData.role === undefined) return "Assign a role";
+        if (rowData.role === undefined || rowData.role == "") return "Assign a role";
         else if ( // not required as changed to lookups (dropdown)
           rowData.role == "Student" ||
           rowData.role == "Teacher" ||
