@@ -73,8 +73,10 @@ function FetchUsers() {
       //   GateKeeper: "GateKeeper",
       // },
       validate: (rowData) => {
-        if (rowData.role === undefined || rowData.role == "") return "Assign a role";
-        else if ( // not required as changed to lookups (dropdown)
+        if (rowData.role === undefined || rowData.role == "")
+          return "Assign a role";
+        else if (
+          // not required as changed to lookups (dropdown)
           rowData.role == "Student" ||
           rowData.role == "Teacher" ||
           rowData.role == "GateKeeper"
@@ -108,7 +110,7 @@ function FetchUsers() {
                       handleSnackbarVisibility(
                         true,
                         "success",
-                        "New user created successfully..!"
+                        `New user creation "${newlyAddedRow.Name}" done successfully..!`
                       );
                     }
                   })
@@ -118,7 +120,8 @@ function FetchUsers() {
                     handleSnackbarVisibility(
                       true,
                       "error",
-                      "New user creation failed due to " + error
+                      `New user creation "${newlyAddedRow.Name}" failed due to ` +
+                        error
                     );
                   });
                 resolve();
@@ -141,7 +144,7 @@ function FetchUsers() {
                       handleSnackbarVisibility(
                         true,
                         "success",
-                        "Row deleted successfully..!"
+                        `User "${selectedRowToDelete.Name}" deleted successfully..!`
                       );
                     }
                   })
@@ -151,7 +154,8 @@ function FetchUsers() {
                     handleSnackbarVisibility(
                       true,
                       "error",
-                      "User Deletion failed due to: " + error
+                      `User "${selectedRowToDelete.Name}" Deletion failed due to: ` +
+                        error
                     );
                   });
 
@@ -175,7 +179,7 @@ function FetchUsers() {
                       handleSnackbarVisibility(
                         true,
                         "success",
-                        "Row updated successfully"
+                        "User  updated successfully"
                       );
                     }
                   })
@@ -199,16 +203,34 @@ function FetchUsers() {
           exportButton: true, // provides the facility to download as CSV and PDF
           actionsColumnIndex: -1, // Display the actions at right side
           addRowPosition: "first", // Show the option of adding a new row at the start of the table
-          selection: true,
+          // selection: true,
         }}
-        actions={[
-          {
-            tooltip: "Remove All Selected Users",
-            icon: "delete",
-            onClick: (evt, data) =>
-              alert("You want to delete " + data.length + " rows"),
+        // actions={[
+        //   {
+        //     tooltip: "Remove All Selected Users",
+        //     icon: "delete",
+        //     onClick: (evt, data) =>
+        //       alert("You want to delete " + data.length + " rows"),
+        //   },
+        // ]}
+        localization={{
+          pagination: {
+            labelDisplayedRows: "{from}-{to} of {count}",
           },
-        ]}
+          toolbar: {
+            nRowsSelected: "{0} row(s) selected",
+          },
+          header: {
+            actions: "Actions",
+          },
+          body: {
+            emptyDataSourceMessage:
+              "No records to display or please try filtering with proper keyowords.",
+            filterRow: {
+              filterTooltip: "Filter",
+            },
+          },
+        }}
       />
       {showSnackBar && (
         <ShowResponse

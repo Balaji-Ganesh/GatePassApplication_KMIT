@@ -215,6 +215,23 @@ function FetchPermissions() {
           actionsColumnIndex: -1, // Display the actions at right side
           addRowPosition: "first", // Show the option of adding a new row at the start of the table
         }}
+        localization={{
+          pagination: {
+            labelDisplayedRows: "{from}-{to} of {count}",
+          },
+          toolbar: {
+            nRowsSelected: "{0} row(s) selected",
+          },
+          header: {
+            actions: "Actions",
+          },
+          body: {
+            emptyDataSourceMessage: "No records to display or please try filtering with proper keyowords.",
+            filterRow: {
+              filterTooltip: "Filter",
+            },
+          },
+        }}
       />
       {showSnackBar && (
         <ShowResponse
