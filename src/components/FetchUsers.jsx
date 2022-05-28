@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from "react";
 import MaterialTable from "material-table";
+import MTableToolbar from "material-table";
 import axios from "axios";
 
 import ShowResponse from "./ShowResponse";
+
+import { Typography } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
+import Tooltip from "@material-ui/core/Tooltip";
+
 // import Snackbar from "@material-ui/core/Snackbar";
 const timeDelay = 1000;
 
@@ -24,6 +31,32 @@ function FetchUsers() {
     setEndOperationsMessage(msg);
   }
 
+  function fetchUsers(code) {
+    fetch(api_url)
+      .then((response) => response.json()) //cvt to JSON
+      // // .then((response) => console.log(response))
+      .then((response) => {
+        console.log(response);
+        response.sort((a, b) => {
+          return new Date(b.createdAt) - new Date(a.createdAt); // sorting DSEC
+        });
+
+        setData(response);
+        if (code =="fresh")
+          handleSnackbarVisibility(true, "info", "Data fetched successfully");
+        else if(code =="refresh")
+          handleSnackbarVisibility(true, "info", "Data refreshed successfully");
+      })
+      .catch((error) => {
+        // console.log("Unable to fetch data" + error);
+        handleSnackbarVisibility(
+          true,
+          "error",
+          "Unable to fetch data due to " + error
+        );
+      });
+  }
+
   useEffect(() => {
     // axios
     //   // .get("https://jsonplaceholder.typicode.com/users")
@@ -31,26 +64,7 @@ function FetchUsers() {
     //   .then((response) => console.log(JSON.parse(response.data)))
     //   // .then((response) => console.log(JSON.parse(response)))
     //   .catch((error) => console.log(error));
-    fetch(api_url)
-      .then((response) => response.json()) //cvt to JSON
-      // // .then((response) => console.log(response))
-      .then((response) => {
-        console.log(response);
-        response.sort((a, b)=>{
-          return new Date(b.createdAt) - new Date(a.createdAt)  // sorting DSEC
-        })
-        
-        setData(response);
-        handleSnackbarVisibility(true, "info", "Data fetched successfully");
-      })
-      .catch((error) => {
-        // console.log("Unable to fetch data" + error);
-        handleSnackbarVisibility(
-          true,
-          "error",
-          "Unable to fetch data due to "+error
-        );
-      });
+    fetchUsers("fresh");
   }, []);
 
   const columns = [
@@ -94,7 +108,23 @@ function FetchUsers() {
 
   return (
     <div className="App">
-      <h4 align="center">List of users registered in the dashboard</h4>
+      <div align="center">
+        <h4 style={{ display: "inline" }} align="center">
+          List of users registered in the dashboard
+        </h4>
+        <div style={{ padding: "0px 10px", flex: "row", display:"inline"}}>
+          <Tooltip title="Refresh data">
+            <IconButton
+              aria-label="refresh"
+              // className={classes.margin}
+              size="medium"
+              onClick={() => fetchUsers("refresh")}
+            >
+              <i class="fa-solid fa-arrows-rotate"></i>
+            </IconButton>
+          </Tooltip>
+        </div>
+      </div>
       <MaterialTable
         title="Users"
         data={data}
