@@ -37,14 +37,14 @@ function FetchUsers() {
       .then((response) => {
         console.log(response);
         setData(response);
-        handleSnackbarVisibility(true, "info", "Data fetched");
+        handleSnackbarVisibility(true, "info", "Data fetched successfully");
       })
       .catch((error) => {
         // console.log("Unable to fetch data" + error);
         handleSnackbarVisibility(
           true,
           "error",
-          "Network Error: Unable to fetch data"
+          "Unable to fetch data due to "+error
         );
       });
   }, []);

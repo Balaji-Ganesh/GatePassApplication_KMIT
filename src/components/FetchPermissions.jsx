@@ -81,7 +81,7 @@ function FetchPermissions() {
         handleSnackbarVisibility(
           true,
           "error",
-          "Network Error: Unable to fetch data"
+          "Unable to fetch data due to "+error
         );
       });
   }
