@@ -216,7 +216,7 @@ function FetchPermissions() {
         startIcon={<GetAppRoundedIcon />}
         gutterBottom
         onClick={() => {
-          // downloadLogs();
+          downloadLogs();
           // alert(new Date().toTimeString().toString())
           handleSnackbarVisibility(
             true,
@@ -249,7 +249,7 @@ function FetchPermissions() {
           },
           body: {
             emptyDataSourceMessage:
-              "No records to display or please try filtering with proper keyowords.",
+              "No records to display or please try filtering with proper keywords.",
             filterRow: {
               filterTooltip: "Filter",
             },

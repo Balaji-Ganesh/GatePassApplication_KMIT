@@ -13,23 +13,38 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 
+import ShowResponse from "./ShowResponse";
+import DashboardWrapper from "./DashboardWrapper";
 import axios from "axios";
 // import { useNavigate } from "react-router-dom";
 // const navigate = useNavigate();
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link
-        color="inherit"
-        href="https://github.com/Balaji-Ganesh/GatePassApplication_KMIT/"
-      >
-        KMITians
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
+    <>
+      <Typography variant="body2" color="textSecondary" align="center">
+        {"Copyright © "}
+        <Link
+          color="inherit"
+          href="https://github.com/shivrajbande/securitygaurd"
+        >
+          API
+        </Link>{" "}
+        {new Date().getFullYear()}
+        {"."}
+      </Typography>
+      <Typography variant="body2" color="textSecondary" align="center">
+        {"Copyright © "}
+        <Link
+          color="inherit"
+          href="https://github.com/Balaji-Ganesh/GatePassApplication_KMIT/"
+        >
+          Dashboard
+        </Link>{" "}
+        {new Date().getFullYear()}
+        {"."}
+      </Typography>
+    </>
   );
 }
 
@@ -55,13 +70,16 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const [signInSuccess, setSignInSuccess] = useState(false);
+  const [signInFailed, setSignInFailed] = useState(false);
+  const [cookiesActiveStatus, setCookiesActiveStatus] = useState(false);
 
   function handleSubmit(e) {
+    setSignInFailed(false);
     e.preventDefault();
     var uniqueId = document.getElementById("uniqueId").value;
     var password = document.getElementById("pwd").value;
     console.log(uniqueId, password);
-    // const api_url = "http://localhost:4000/api/authenticate";
+    // const api_url = "http://localhost:4001/api/authenticate";
     const api_url = "https://securitygaurd.herokuapp.com/api/authenticate/";
 
     const data = {
@@ -72,71 +90,90 @@ export default function SignIn() {
       .post(api_url, data)
       .then((response) => {
         console.log(response);
-        if (response.status == 200) setSignInSuccess(true);
-        else {
+        if (response.status == 200) {
+          setSignInSuccess(true);
+          setCookies(true, uniqueId);
+        } else {
           console.log("Incorrect details");
           setSignInSuccess(false);
+          setCookies(false, "");
         }
       })
       .catch((error) => {
         console.log(error);
+        setSignInFailed(true);
       });
+    console.log("Login status: " + signInSuccess);
   }
   const classes = useStyles();
 
+  // Check the active status of the cookies..
+  function setCookies(mode, id) {
+    if (mode) {
+      const d = new Date();
+      d.setTime(d.getTime() + 1 * 30 * 1000); // for a session of 30min
+      document.cookie = "adminUser=" + id + ";expires=" + d.toUTCString() + ";"; // set the cookie
+    } else document.cookie = "adminUser=;"; // unset the cookiee..
+  }
+  // let cook = getCookie("adminUser");
   return (
     <>
       {/* {signInSuccess ? (
         () => navigate("/dashboard")
       ) : ( */}
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <form className={classes.form}>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="uniqueId"
-              type="text"
-              label="Username"
-              name="uniqueId"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="pwd"
-              autoComplete="current-password"
-            />
-            {/* <FormControlLabel
+      {signInSuccess ||
+      (document.cookie.search("adminUser=") != -1 &&
+        document.cookie.length > 10) ? (
+        <DashboardWrapper />
+      ) : (
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign in
+            </Typography>
+            <form className={classes.form}>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="uniqueId"
+                type="text"
+                label="Username"
+                name="uniqueId"
+                autoComplete="email"
+                autoFocus
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="pwd"
+                autoComplete="current-password"
+              />
+              {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           /> */}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              onClick={handleSubmit}
-            >
-              Sign In
-            </Button>
-            {/* <Grid container>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                onClick={handleSubmit}
+              >
+                Sign In
+              </Button>
+              {/* <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">
                 Forgot password?
@@ -148,12 +185,19 @@ export default function SignIn() {
               </Link>
             </Grid>
           </Grid> */}
-          </form>
-        </div>
-        <Box mt={8}>
-          <Copyright />
-        </Box>
-      </Container>
+            </form>
+          </div>
+          <Box mt={8}>
+            <Copyright />
+          </Box>
+          {signInFailed && (
+            <ShowResponse
+              severity={"error"}
+              message={"Login failed, please try again..!!"}
+            />
+          )}
+        </Container>
+      )}
       {/* // } */}
     </>
   );
