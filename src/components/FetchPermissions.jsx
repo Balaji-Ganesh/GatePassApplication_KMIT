@@ -118,7 +118,6 @@ function FetchPermissions() {
   const columns = [
     { title: "Student ID", field: "RollNumber" },
     { title: "Reason", field: "reason" },
-    // { title: "Pass Mode", field: "passMode" },
     {
       title: "Permission Status",
       field: "Type",
