@@ -7,7 +7,6 @@ import Grid from "@material-ui/core/Grid";
 
 import FetchPermissions from "./FetchPermissions";
 import FetchUsers from "./FetchUsers";
-import SignIn from "./SignIn";
 
 function DashBoard() {
   const [viewUsers, setViewUsers] = useState(true);

@@ -3,10 +3,10 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
+// import FormControlLabel from "@material-ui/core/FormControlLabel";
+// import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
+// import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
 export default function SignIn() {
   const [signInSuccess, setSignInSuccess] = useState(false);
   const [signInFailed, setSignInFailed] = useState(false);
-  const [cookiesActiveStatus, setCookiesActiveStatus] = useState(false);
+  // const [cookiesActiveStatus, setCookiesActiveStatus] = useState(false);
 
   function handleSubmit(e) {
     setSignInFailed(false);
@@ -79,8 +79,8 @@ export default function SignIn() {
     var uniqueId = document.getElementById("uniqueId").value;
     var password = document.getElementById("pwd").value;
     console.log(uniqueId, password);
-    // const api_url = "http://localhost:4001/api/authenticate";
-    const api_url = "https://securitygaurd.herokuapp.com/api/authenticate/";
+    const api_url = "http://localhost:4001/api/authenticate";
+    // const api_url = "https://securitygaurd.herokuapp.com/api/authenticate/";
 
     const data = {
       Name: uniqueId,
@@ -90,9 +90,10 @@ export default function SignIn() {
       .post(api_url, data)
       .then((response) => {
         console.log(response);
-        if (response.status == 200) {
+        if (response.status === 200) {
           setSignInSuccess(true);
           setCookies(true, uniqueId);
+          console.log("Cookies set. check: "+document.cookie)
         } else {
           console.log("Incorrect details");
           setSignInSuccess(false);
@@ -111,7 +112,7 @@ export default function SignIn() {
   function setCookies(mode, id) {
     if (mode) {
       const d = new Date();
-      d.setTime(d.getTime() + 1 * 30 * 1000); // for a session of 30min
+      d.setTime(d.getTime() + 30 * 60 * 1000); // for a session of 30min
       document.cookie = "adminUser=" + id + ";expires=" + d.toUTCString() + ";"; // set the cookie
     } else document.cookie = "adminUser=;"; // unset the cookiee..
   }
@@ -122,7 +123,7 @@ export default function SignIn() {
         () => navigate("/dashboard")
       ) : ( */}
       {signInSuccess ||
-      (document.cookie.search("adminUser=") != -1 &&
+      (document.cookie.search("adminUser=") !== -1 &&
         document.cookie.length > 10) ? (
         <DashboardWrapper />
       ) : (
@@ -134,6 +135,9 @@ export default function SignIn() {
             </Avatar>
             <Typography component="h1" variant="h5">
               Sign in
+            </Typography>
+            <Typography component="h4" variant="p">
+              Welcome to Niyantrak dashboard
             </Typography>
             <form className={classes.form}>
               <TextField

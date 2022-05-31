@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
 import MaterialTable from "material-table";
-import MTableToolbar from "material-table";
 import axios from "axios";
 
 import ShowResponse from "./ShowResponse";
 
-import { Typography } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 
@@ -34,21 +31,21 @@ function FetchUsers() {
   function fetchUsers(code) {
     fetch(api_url)
       .then((response) => response.json()) //cvt to JSON
-      // // .then((response) => console.log(response))
+      // // .then((response) => // console.log((response))
       .then((response) => {
-        console.log(response);
+        // console.log((response);
         response.sort((a, b) => {
           return new Date(b.createdAt) - new Date(a.createdAt); // sorting DSEC
         });
 
         setData(response);
-        if (code =="fresh")
+        if (code === "fresh")
           handleSnackbarVisibility(true, "info", "Data fetched successfully");
-        else if(code =="refresh")
+        else if(code === "refresh")
           handleSnackbarVisibility(true, "info", "Data refreshed successfully");
       })
       .catch((error) => {
-        // console.log("Unable to fetch data" + error);
+        // // console.log(("Unable to fetch data" + error);
         handleSnackbarVisibility(
           true,
           "error",
@@ -61,9 +58,9 @@ function FetchUsers() {
     // axios
     //   // .get("https://jsonplaceholder.typicode.com/users")
     //   .get(api_url)
-    //   .then((response) => console.log(JSON.parse(response.data)))
-    //   // .then((response) => console.log(JSON.parse(response)))
-    //   .catch((error) => console.log(error));
+    //   .then((response) => // console.log((JSON.parse(response.data)))
+    //   // .then((response) => // console.log((JSON.parse(response)))
+    //   .catch((error) => // console.log((error));
     fetchUsers("fresh");
   }, []);
 
@@ -95,9 +92,9 @@ function FetchUsers() {
           return "Assign a role";
         else if (
           // not required as changed to lookups (dropdown)
-          rowData.role == "Student" ||
-          rowData.role == "Teacher" ||
-          rowData.role == "GateKeeper"
+          rowData.role === "Student" ||
+          rowData.role === "Teacher" ||
+          rowData.role === "GateKeeper"
         )
           return true;
         return "Should either be 'Student', 'Teacher' or 'GateKeeper' (Case-Sensitive)";
@@ -132,14 +129,14 @@ function FetchUsers() {
         editable={{
           onRowAdd: (newlyAddedRow) =>
             new Promise((resolve, reject) => {
-              // console.log(newlyAddedRow);
+              // // console.log((newlyAddedRow);
               const newData = [...data, newlyAddedRow];
               setTimeout(() => {
                 axios
                   .post(api_url, newlyAddedRow)
                   .then((response) => {
                     if (response.status === 200) {
-                      // console.log(response.data);
+                      // // console.log((response.data);
                       setData(newData);
                       handleSnackbarVisibility(
                         true,
@@ -149,8 +146,8 @@ function FetchUsers() {
                     }
                   })
                   .catch((error) => {
-                    // console.log("New user not created.");
-                    // console.log(error);
+                    // // console.log(("New user not created.");
+                    // // console.log((error);
                     handleSnackbarVisibility(
                       true,
                       "error",
@@ -164,7 +161,7 @@ function FetchUsers() {
             }),
           onRowDelete: (selectedRowToDelete) =>
             new Promise((resolve, reject) => {
-              // // console.log(selectedRowToDelete._id); // get the mongoID to delte
+              // // // console.log((selectedRowToDelete._id); // get the mongoID to delte
               const idxToDelete = selectedRowToDelete.tableData.id;
               const rowsAfterDelete = [...data];
               rowsAfterDelete.splice(idxToDelete, 1);
@@ -183,8 +180,8 @@ function FetchUsers() {
                     }
                   })
                   .catch((error) => {
-                    // console.log("User deletion failed");
-                    // console.log(error);
+                    // // console.log(("User deletion failed");
+                    // // console.log((error);
                     handleSnackbarVisibility(
                       true,
                       "error",
@@ -199,7 +196,7 @@ function FetchUsers() {
             }),
           onRowUpdate: (rowUpdatedValues, rowOldValues) =>
             new Promise((resolve, reject) => {
-              // console.log(rowUpdatedValues);
+              // // console.log((rowUpdatedValues);
               const idxUpdatedRow = rowOldValues.tableData.id;
               const rowsAfterUpdate = [...data];
               rowsAfterUpdate[idxUpdatedRow] = rowUpdatedValues; // Update them..
@@ -218,8 +215,8 @@ function FetchUsers() {
                     }
                   })
                   .catch((error) => {
-                    // console.log("User updation failed");
-                    // console.log(error);
+                    // // console.log(("User updation failed");
+                    // // console.log((error);
 
                     handleSnackbarVisibility(
                       true,

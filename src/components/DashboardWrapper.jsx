@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import AppBar from "@material-ui/core/AppBar";
 
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -9,6 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Link from "@material-ui/core/Link";
 import DashBoard from "./DashBoard";
+import Button from "@material-ui/core/Button";
 
 function Copyright() {
   return (
@@ -57,19 +58,35 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(6),
   },
+  root: {
+    flexGrow: 1,
+  },
 }));
 
 export default function DashboardWrapper() {
   const classes = useStyles();
+  // const [tryingToLogout, setTryingToLogout] = useState(false);
+
+  function logout() {
+    // delete the cookies..
+    if (window.confirm("Are you sure to Logout?")) {
+      document.cookie = "adminUser=;";
+      window.location.reload();
+    }
+    // setTryingToLogout(false);
+  }
 
   return (
     <React.Fragment>
       <CssBaseline />
       <AppBar position="relative">
-        <Toolbar>
+        <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
           <Typography variant="h6" color="inherit" noWrap>
             College Name
           </Typography>
+          <Button color="inherit" onClick={logout}>
+            Logout
+          </Button>
         </Toolbar>
       </AppBar>
       <main>
