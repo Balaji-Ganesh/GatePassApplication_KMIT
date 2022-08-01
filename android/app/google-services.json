@@ -1,0 +1,126 @@
+{
+  "project_info": {
+    "project_number": "380433476859",
+    "project_id": "gatepass-b7114",
+    "storage_bucket": "gatepass-b7114.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:380433476859:android:43ac38002c2e66d4f1d45e",
+        "android_client_info": {
+          "package_name": "com.example.aacharya"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "380433476859-4eaq5edeg4kiqbcit1kfhd6u1kvj39tf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhtbGwVeRabEDCaKzbsiflhhM9SMjd-OI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "380433476859-4eaq5edeg4kiqbcit1kfhd6u1kvj39tf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:380433476859:android:bcc8ae0bcc17019bf1d45e",
+        "android_client_info": {
+          "package_name": "com.example.firebaseproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "380433476859-4eaq5edeg4kiqbcit1kfhd6u1kvj39tf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhtbGwVeRabEDCaKzbsiflhhM9SMjd-OI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "380433476859-4eaq5edeg4kiqbcit1kfhd6u1kvj39tf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:380433476859:android:4637092d77039fb8f1d45e",
+        "android_client_info": {
+          "package_name": "com.example.rakshak"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "380433476859-4eaq5edeg4kiqbcit1kfhd6u1kvj39tf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhtbGwVeRabEDCaKzbsiflhhM9SMjd-OI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "380433476859-4eaq5edeg4kiqbcit1kfhd6u1kvj39tf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:380433476859:android:d577e2dbd137922af1d45e",
+        "android_client_info": {
+          "package_name": "com.example.vidyarthi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "380433476859-4eaq5edeg4kiqbcit1kfhd6u1kvj39tf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhtbGwVeRabEDCaKzbsiflhhM9SMjd-OI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "380433476859-4eaq5edeg4kiqbcit1kfhd6u1kvj39tf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
