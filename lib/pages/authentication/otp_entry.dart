@@ -164,37 +164,6 @@ class _OTPEntryScreenState extends State<OTPEntryScreen> {
     );
   }
 
-/*
-  _verifyPhone() async {
-    await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: "+91${widget.mobileNumber}",
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          print("in validation Completed");
-          await FirebaseAuth.instance
-              .signInWithCredential(credential)
-              .then((value) async {
-            if (value.user != null) {
-              print("User logged in");
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomePage(greetings: 'greetings')));
-            }
-          });
-        },
-        verificationFailed: (FirebaseAuthException e) {
-          print(e.message);
-        },
-        codeSent: (String verificationId, int? resendToken) {
-          setState(() {
-            _verificationCode = verificationId;
-          });
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {
-          setState(() {
-            _verificationCode = verificationId;
-          });
-        },
-        timeout: const Duration(seconds: 60));
-  }
-  */
   Future _verifyPhoneNumberBySendingOTP() async {
     print("OTP sending");
     auth.verifyPhoneNumber(
