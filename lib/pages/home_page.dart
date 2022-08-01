@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rakshak/pages/login_page.dart';
+import 'package:rakshak/pages/authentication/phone_number_login.dart';
 
 import 'package:rakshak/utils/constants.dart';
 import 'package:rakshak/widgets/history.dart';
@@ -9,8 +9,7 @@ import 'package:rakshak/widgets/qr_code_scanner.dart';
 
 class HomePage extends StatefulWidget{
   static const routeName = "/home";
-  String greetings;
-  HomePage({Key? key, required this.greetings}) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -35,7 +34,7 @@ class _HomePageState extends State<HomePage>{
               // Here set back to false..
               Constants.sharedPrefs.setBool("isLoggedIn", false);                 /// set to false..
               Constants.sharedPrefs.setString("username", "<no_name>");                    //set to empty
-              Navigator.pushReplacementNamed(context, LoginPage.routeName);       // Navigate to the login screen
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>PhoneNumberLogin()));       // Navigate to the login screen
             }, icon: Icon(Icons.logout),
               tooltip: "Logout",
             )
