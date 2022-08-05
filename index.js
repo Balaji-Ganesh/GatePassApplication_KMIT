@@ -5,6 +5,7 @@ const teacherRoutes = require("./routes/teachers.routes");
 const studentRoutes = require("./routes/students.routes");
 const permissionRoutes = require("./routes/permissions.routes");
 const authenticationRoute = require("./routes/authentication.routes");
+require("dotenv").config();
 
 // Performing necessary configurations.. -- connecting middlewares
 const app = express();
