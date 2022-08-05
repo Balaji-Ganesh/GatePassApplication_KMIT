@@ -194,7 +194,7 @@ class _OTPEntryScreenState extends State<OTPEntryScreen> {
       await auth.signInWithCredential(credential)
           .then((value) {
         Fluttertoast.showToast(
-            msg: "You are logged in successfully",
+            msg: "You have logged in successfully",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 1,
@@ -213,6 +213,9 @@ class _OTPEntryScreenState extends State<OTPEntryScreen> {
           this._status = Status.error;
         });
       });
+    }
+    else{
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: const Text("An error occured in verification")));
     }
   }
 }

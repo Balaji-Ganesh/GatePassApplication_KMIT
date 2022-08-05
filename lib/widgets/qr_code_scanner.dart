@@ -1,10 +1,12 @@
 // library imports
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 // local imports
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:rakshak/pages/fetch_permission.dart';
 import 'package:rakshak/pages/permission_validator.dart';
 
 class QRCodeScanner extends StatefulWidget{
@@ -50,7 +52,7 @@ class _QRCodeScannerState extends State<QRCodeScanner>{
     return MobileScanner(
       allowDuplicates: false,
       controller: _scannerController,
-      onDetect: (barcode, args){
+      onDetect: (barcode, args)async{
         if(barcode.rawValue == null)
           debugPrint('Failed to scan bar code');
         else{
@@ -60,10 +62,14 @@ class _QRCodeScannerState extends State<QRCodeScanner>{
           if(regExp.hasMatch(_scanResults!)) {  // once a valid rollno found..
             _scannerController.stop();                  // stop scanning
 
+
+
+
             Navigator.push (
                 context,
                 MaterialPageRoute(
-                  builder: (context) => PermissionValidator(scannedRollNo: _scanResults!),
+                  //builder: (context) => PermissionValidator(scannedRollNo: _scanResults!),
+                  builder: (context) => PermissionFetcher(scannedRollNo: _scanResults!),
               ));
 
             // setup the things again..
@@ -76,7 +82,16 @@ class _QRCodeScannerState extends State<QRCodeScanner>{
       },
     );
   }
-
+  Future getDocument() async{
+    await FirebaseFirestore.instance.collection("permissions").where("RollNumber", isEqualTo: _scanResults).get()
+        .then(
+            (snapshot) => snapshot.docs.forEach((document) {
+          print("data retrieved....");
+              print(document.reference);
+          print(document.data());
+        })
+    );
+  }
   @override
   Widget buildShowScanResult(BuildContext context){
     String firstFilterStatus = " - Invalid Rollno detected";

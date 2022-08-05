@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage>{
               Constants.sharedPrefs.setBool("isLoggedIn", false);                 /// set to false..
               Constants.sharedPrefs.setString("username", "<no_name>");                    //set to empty
               Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>PhoneNumberLogin()));       // Navigate to the login screen
-            }, icon: Icon(Icons.logout),
+            }, icon: const Icon(Icons.logout),
               tooltip: "Logout",
             )
           ],

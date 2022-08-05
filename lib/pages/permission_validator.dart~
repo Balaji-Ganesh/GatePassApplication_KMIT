@@ -27,8 +27,10 @@ class _PermissionValidatorState extends State<PermissionValidator> {
     //    body: Center(
     //return Center(
         body: FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
-            future: Permissions().getPermissionProfile(widget.scannedRollNo),
-          //future: FirebaseFirestore.instance.collection("permissions").where("RollNumber", isEqualTo: widget.scannedRollNo).get(),
+            //future: Permissions().getPermissionProfile(widget.scannedRollNo),
+          future: FirebaseFirestore.instance
+                    .collection("permissions")
+                    .where("RollNumber", isEqualTo: widget.scannedRollNo).get(),
             builder: ( context , snapshot) {
               //print("received data: "+snapshot.data);
               if (snapshot.hasError) {

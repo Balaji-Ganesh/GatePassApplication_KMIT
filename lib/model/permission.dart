@@ -38,3 +38,32 @@ class Permission {
     return data;
   }
 }
+
+class Student {
+  String? rollNo;
+  String? name;
+  int? year;
+  String? section;
+
+  Student(
+      {this.rollNo,
+        this.name,
+        this.year,
+        this.section,});
+
+  Student.fromJson(Map<String, dynamic> json) {
+    rollNo = json['rollNo'];
+    name = json['name'];
+    year = json['year'];
+    section = json['section'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['rollNo'] = this.rollNo;
+    data['name'] = this.name;
+    data['year'] = this.year;
+    data['section'] = this.section;
+    return data;
+  }
+}
