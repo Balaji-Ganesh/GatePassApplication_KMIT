@@ -10,8 +10,9 @@ import Tooltip from "@material-ui/core/Tooltip";
 // import axios from "axios";
 
 function FetchPermissions() {
-  // const api_url = "http://localhost:4001/permissions/"; // for local testing..
-  const api_url = "https://securitygaurd.herokuapp.com/permissions/"; // as per common API of Shiva and Ganesh
+  //const api_url = "http://localhost:4000/api/permissions/"; // for local testing..
+  const api_url = "https://rakshakapi.herokuapp.com/api/permissions";
+  // const api_url = "https://securitygaurd.herokuapp.com/permissions/"; // as per common API of Shiva and Ganesh
   // const api_url = "https://gatepassapplication.herokuapp.com/api/permission"; /// for deployment..
   const [data, setData] = useState([]);
   // for snack bar -- showing status to the user..
@@ -27,15 +28,31 @@ function FetchPermissions() {
   }
 
   function polishResponse(obj) {
+    // convert the firebase timestamp to understandable timestamp
+    for (let i = 0; i < Object.keys(obj).length; i++) {
+      obj[i].CreatedAt = new Date(obj[i].CreatedAt.nanoseconds * 1000); //.toDateString();
+    }
+
     // sort the objects based on the permission time (in DESC, so recent permissions will be on head)
     obj.sort((a, b) => {
-      return new Date(b.createdAt) - new Date(a.createdAt); /// sort DESC
+      return (
+        new Date(b.CreatedAt.nanoseconds * 1000) -
+        new Date(a.CreatedAt.nanoseconds * 1000)
+      ); /// sort DESC
     });
 
     // perform polishing..
     for (let i = 0; i < Object.keys(obj).length; i++) {
       // filter out..
-      let { Name, passMode, Type, reason, RollNumber, createdAt } = obj[i];
+      let {
+        StudentName,
+        Type,
+        Reason,
+        RollNumber,
+        CreatedAt,
+        Year,
+        GrantedBy,
+      } = obj[i];
       // permission status
       if (Type === 0) Type = "Lunch Pass";
       else if (Type === 1) Type = "Gate Pass";
@@ -44,35 +61,29 @@ function FetchPermissions() {
       // date..
       // let d = new Date(createdAt);
       // // console.log("date: ", d.toLocaleString());
-      createdAt = new Date(createdAt).toLocaleString();
-
-      // pass mode
-      // if (passMode === 0) passMode = "Lunch Pass";
-      // else if (passMode === 1) passMode = "Gate Pass";
+      CreatedAt = new Date(CreatedAt).toLocaleString();
 
       // Place back..
       obj[i] = {
         RollNumber: RollNumber,
-        Name: Name,
-        createdAt: createdAt,
-        // passMode: passMode,
+        Name: StudentName,
+        Year: Year,
+        CreatedAt: CreatedAt,
         Type: Type,
-        reason: reason,
+        Reason: Reason,
+        GrantedBy: GrantedBy,
       };
-      // // console.log("REASONNNNNNNNNNNNNNNN: " + reason);
     }
     //// console.log("in polish work..", obj);
     return obj;
   }
 
   function fetchPermissions(code) {
+    console.log("Came to fetch permissions");
     fetch(api_url)
       .then((response) => response.json()) //cvt to JSON
       // .then((response) => // console.log(response))
       .then((response) => {
-        // console.log(response);
-        // const {} = response;
-        // some furnishing..
         response = polishResponse(response);
         // console.log("After polishing: ", response);
         setData(response);
@@ -95,36 +106,21 @@ function FetchPermissions() {
       });
   }
 
-  // async function fetchPermissionsAsync() {
-  //   let json = await axios
-  //     .get("https://tutorialzine.com/misc/files/example.json")
-  //     .then((response) => // console.log(response))
-  //     .catch((error) => // console.log(error));
-  //   // console.log("after the call to service", json);
-  //   // return json;
-  // }
-
   useEffect(() => {
     fetchPermissions("fresh"); // used for fetch..
-    // from: https://stackoverflow.com/a/53932719
-    // (async () => {
-    //   // let abc = await getJSONAsync();
-    //   // await getJSONAsync();
-    //   await fetchPermissionsAsync();
-    //   // // console.log(">>>>>>>>>>> abc", abc);
-    // })();
   }, []);
 
   const columns = [
     { title: "Student ID", field: "RollNumber" },
-    { title: "Reason", field: "reason" },
+    { title: "Year", field: "Year" },
+    { title: "Reason", field: "Reason" },
     {
       title: "Permission Status",
       field: "Type",
       // lookup: { 0: "Lunch Pass", 1: "Gate Pass", "-1": "Pass Expired" },
     },
-    { title: "Granted by Faculty(ID)", field: "Name" },
-    { title: "Granted At", field: "createdAt" },
+    { title: "Granted by Faculty(ID)", field: "GrantedBy" },
+    { title: "Granted At", field: "CreatedAt" },
     // profile picture, in next version...
   ];
 

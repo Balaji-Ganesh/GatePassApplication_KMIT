@@ -79,8 +79,9 @@ export default function SignIn() {
     var uniqueId = document.getElementById("uniqueId").value;
     var password = document.getElementById("pwd").value;
     console.log(uniqueId, password);
-    // const api_url = "http://localhost:4001/api/authenticate";
-    const api_url = "https://securitygaurd.herokuapp.com/api/authenticate/";
+    // const api_url = "http://localhost:4000/api/authenticate";
+    const api_url = "https://rakshakapi.herokuapp.com/api/authenticate";   // New API
+    //const api_url = "https://securitygaurd.herokuapp.com/api/authenticate/";
 
     const data = {
       Name: uniqueId,

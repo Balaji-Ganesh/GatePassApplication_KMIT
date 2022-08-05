@@ -10,9 +10,10 @@ import Tooltip from "@material-ui/core/Tooltip";
 // import Snackbar from "@material-ui/core/Snackbar";
 const timeDelay = 1000;
 
-function FetchUsers() {
-  // const api_url = "http://localhost:4000/api/users/"; // as per old API
-  const api_url = "https://securitygaurd.herokuapp.com/api/Details/"; // as per common API of Shiva and Ganesh
+function FetchTeachers() {
+  // const api_url = "http://localhost:4000/api/teachers/"; // as per old API
+  const api_url = "http://rakshakapi.herokuapp.com/api/teachers/"; // as per old API
+  // const api_url = "https://securitygaurd.herokuapp.com/api/Details/"; // as per common API of Shiva and Ganesh
   // const api_url = "https://gatepassapplication.herokuapp.com/api/users/"; /// for deployment..
   //   const api_url = "https://gatepassapplication.herokuapp.com/api/users/";
   const [data, setData] = useState([]);
@@ -28,7 +29,7 @@ function FetchUsers() {
     setEndOperationsMessage(msg);
   }
 
-  function fetchUsers(code) {
+  function FetchTeachers(code) {
     fetch(api_url)
       .then((response) => response.json()) //cvt to JSON
       // // .then((response) => // console.log((response))
@@ -41,7 +42,7 @@ function FetchUsers() {
         setData(response);
         if (code === "fresh")
           handleSnackbarVisibility(true, "info", "Data fetched successfully");
-        else if(code === "refresh")
+        else if (code === "refresh")
           handleSnackbarVisibility(true, "info", "Data refreshed successfully");
       })
       .catch((error) => {
@@ -55,13 +56,7 @@ function FetchUsers() {
   }
 
   useEffect(() => {
-    // axios
-    //   // .get("https://jsonplaceholder.typicode.com/users")
-    //   .get(api_url)
-    //   .then((response) => // console.log((JSON.parse(response.data)))
-    //   // .then((response) => // console.log((JSON.parse(response)))
-    //   .catch((error) => // console.log((error));
-    fetchUsers("fresh");
+    FetchTeachers("fresh");
   }, []);
 
   const columns = [
@@ -79,25 +74,14 @@ function FetchUsers() {
       },
     },
     {
-      title: "Role",
-      field: "role",
-      // lookup: {
-      //   // In next update, encode these(keys) into numerics, so can save space and bandwidth.
-      //   Student: "Student",
-      //   Teacher: "Teacher",
-      //   GateKeeper: "GateKeeper",
-      // },
+      title: "e-mail",
+      field: "Email",
       validate: (rowData) => {
+        const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if (rowData.role === undefined || rowData.role == "")
           return "Assign a role";
-        else if (
-          // not required as changed to lookups (dropdown)
-          rowData.role === "Student" ||
-          rowData.role === "Teacher" ||
-          rowData.role === "GateKeeper"
-        )
-          return true;
-        return "Should either be 'Student', 'Teacher' or 'GateKeeper' (Case-Sensitive)";
+        else if (emailRegex.test(rowData.Email)) return true;
+        return "Invalid e-mail";
       },
     },
     // profile picture, in next version...
@@ -109,13 +93,13 @@ function FetchUsers() {
         <h4 style={{ display: "inline" }} align="center">
           List of users registered in the dashboard
         </h4>
-        <div style={{ padding: "0px 10px", flex: "row", display:"inline"}}>
+        <div style={{ padding: "0px 10px", flex: "row", display: "inline" }}>
           <Tooltip title="Refresh data">
             <IconButton
               aria-label="refresh"
               // className={classes.margin}
               size="medium"
-              onClick={() => fetchUsers("refresh")}
+              onClick={() => FetchTeachers("refresh")}
             >
               <i class="fa-solid fa-arrows-rotate"></i>
             </IconButton>
@@ -123,7 +107,7 @@ function FetchUsers() {
         </div>
       </div>
       <MaterialTable
-        title="Users"
+        title="Teachers"
         data={data}
         columns={columns}
         editable={{
@@ -143,6 +127,7 @@ function FetchUsers() {
                         "success",
                         `New user creation "${newlyAddedRow.Name}" done successfully..!`
                       );
+                      FetchTeachers("refresh");
                     }
                   })
                   .catch((error) => {
@@ -167,7 +152,7 @@ function FetchUsers() {
               rowsAfterDelete.splice(idxToDelete, 1);
               setTimeout(() => {
                 axios
-                  .delete(api_url + selectedRowToDelete._id)
+                  .delete(api_url + selectedRowToDelete.id)
                   .then((response) => {
                     if (response.status === 200) {
                       // When success..
@@ -202,7 +187,7 @@ function FetchUsers() {
               rowsAfterUpdate[idxUpdatedRow] = rowUpdatedValues; // Update them..
               setTimeout(() => {
                 axios
-                  .put(api_url + rowUpdatedValues._id, rowUpdatedValues)
+                  .put(api_url + rowUpdatedValues.id, rowUpdatedValues)
                   .then((response) => {
                     if (response.status === 200) {
                       // When "OK"
@@ -273,4 +258,4 @@ function FetchUsers() {
   );
 }
 
-export default FetchUsers;
+export default FetchTeachers;
