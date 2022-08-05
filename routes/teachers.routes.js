@@ -21,10 +21,10 @@ router.post("/", async (request, response) => {
 // getting all the teachers profiles..
 router.get("/", async (request, response) => {
   try {
-    console.log("Came to fetch teachers data");
+    // console.log("Came to fetch teachers data");
     //  get the teachers data..
     const teachersSnapshot = await Teachers.get();
-    console.log("snapshot: " + teachersSnapshot);
+    // console.log("snapshot: " + teachersSnapshot);
     const teachersList = teachersSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),

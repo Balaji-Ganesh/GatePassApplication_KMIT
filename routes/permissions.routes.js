@@ -22,14 +22,14 @@ router.post("/", async (request, response) => {
 router.get("/", async (request, response) => {
   try {
     const snapshot = await Permissions.get();
-    const usersList = snapshot.docs.map((doc) => ({
+    const permissionsList = snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
-    response.status(200).send(usersList);
+    response.status(200).send(permissionsList);
   } catch (error) {
     response.status(500).json({
-      msg: "Error in fetching users. Please try again.",
+      msg: "Error in fetching permissions. Please try again.",
       error: error,
     });
   }

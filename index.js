@@ -20,7 +20,7 @@ app.use("/api/authenticate", authenticationRoute);
 
 // dummy route..
 app.get("/", (request, response) => {
-  console.log("A request from user");
+  // console.log("A request from user");
   response.status(200).send("Hello");
 });
 

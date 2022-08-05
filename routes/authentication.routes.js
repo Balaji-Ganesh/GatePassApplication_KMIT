@@ -38,7 +38,7 @@ router.post("", async (request, response) => {
     console.log("[ERROR] Login failed. Error: " + error);
     response.status(500).json();
   } */
-  console.log(request.body);
+  // console.log(request.body);
   if (
     request.body.Name == process.env.UNAME &&
     request.body.password == process.env.PASSWORD

@@ -7,7 +7,7 @@ const Students = db.collection("students");
 // Creating a new user
 router.post("/", async (request, response) => {
   console.log("[DEBUG] Received response for adding user details: ");
-  console.log(response);
+  // console.log(response);
 
   try {
     const data = request.body;
@@ -41,9 +41,9 @@ router.get("/", async (request, response) => {
 
 // updating a user..
 router.put("/:id", async (request, response) => {
-  console.log(
-    "[DEBUG] Received response for editing user details: " + response.body
-  );
+  // console.log(
+  //   "[DEBUG] Received response for editing user details: " + response.body
+  // );
   try {
     //const id = request.body.id; // get the Id of the user to be deleted.
     //delete request.body.id; // erase `id` from the body, as document doesn't contain id.
@@ -61,7 +61,7 @@ router.put("/:id", async (request, response) => {
 router.delete("/:id", async (request, response) => {
   const id = request.params.id;
   console.log("[DEBUG] Received response for adding user details: (id) " + id);
-  console.log(response);
+  // console.log(response);
 
   try {
     await Students.doc(id).delete(); // currently not performint any filtration, but good  to do.
