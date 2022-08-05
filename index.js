@@ -20,11 +20,11 @@ app.use("/api/authenticate", authenticationRoute);
 
 // dummy route..
 app.get("/", (request, response) => {
-  // console.log("A request from user");
-  response.status(200).send("Hello");
+  console.log("A request from user");
+  response.status(200).json("Hello");
 });
 
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log("Server running on " + PORT);
 });
