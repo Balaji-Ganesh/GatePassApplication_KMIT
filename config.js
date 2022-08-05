@@ -18,7 +18,5 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-const Teachers = db.collection("teachers");
-const Students = db.collection("students");
-const Permissions = db.collection("permissions");
-(module.exports = Permissions), Teachers, Students;
+
+module.exports = db;

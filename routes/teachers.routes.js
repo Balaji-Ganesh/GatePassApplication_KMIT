@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const Teachers = require("../config");
+const db = require("../config");
+
+const Teachers = db.collection("teachers");
 
 // Creating a new user
 router.post("/", async (request, response) => {
@@ -16,36 +18,31 @@ router.post("/", async (request, response) => {
   }
 });
 
-// getting all the users..
+// getting all the teachers profiles..
 router.get("/", async (request, response) => {
   try {
+    console.log("Came to fetch teachers data");
     //  get the teachers data..
     const teachersSnapshot = await Teachers.get();
+    console.log("snapshot: " + teachersSnapshot);
     const teachersList = teachersSnapshot.docs.map((doc) => ({
       id: doc.id,
-      role: "Teacher",
       ...doc.data(),
     }));
-    const studentsSnapshot = await Teachers.get();
-    const studentsList = studentsSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      role: "Student",
-      ...doc.data(),
-    }));
-    
-    response.status(200).send(studentsList);
+
+    response.status(200).send(teachersList);
   } catch (error) {
     response.status(500).json({
-      msg: "Error in fetching users. Please try again.",
+      msg: "Error in fetching teachers profiles. Please try again.",
       error: error,
     });
   }
 });
 
 // updating a user..
-router.patch("/", async (request, response) => {
+router.put("/:id", async (request, response) => {
   try {
-    const id = request.body.id; // get the Id of the user to be deleted.
+    const id = request.params.id; // get the Id of the user to be deleted.
     delete request.body.id; // erase `id` from the body, as document doesn't contain id.
     await Teachers.doc(id).update(request.body); // currently not performint any filtration, but good  to do.
     response.status(200).json({ msg: "Updation Success" });
@@ -58,9 +55,9 @@ router.patch("/", async (request, response) => {
 });
 
 // deleting a user..
-router.delete("/", async (request, response) => {
+router.delete("/:id", async (request, response) => {
   try {
-    await Teachers.doc(request.body.id).delete(); // currently not performint any filtration, but good  to do.
+    await Teachers.doc(request.params.id).delete(); // currently not performint any filtration, but good  to do.
     response.status(200).json({ msg: "Deletion Success" });
   } catch (error) {
     response.status(500).json({

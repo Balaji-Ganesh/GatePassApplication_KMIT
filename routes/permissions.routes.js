@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const Permissions = require("../config");
+const db = require("../config");
+
+const Permissions = db.collection("permissions");
 
 // Creating a new permission
 router.post("/", async (request, response) => {
