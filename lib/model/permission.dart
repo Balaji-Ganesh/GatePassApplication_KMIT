@@ -1,68 +1,71 @@
 class Permission {
-  String? rollNo;
-  String? name;
-  int? permissionStatus;
-  int? year;
+  String? RollNumber;
+  String? StudentName;
+  int? Type;
+  int? Year;
   String? section;
-  String? grantedBy;
-  String? studentPicture;
+  String? GrantedBy;
+  String? CreatedAt;
 
   Permission(
-      {this.rollNo,
-        this.name,
-        this.permissionStatus,
-        this.year,
-        this.section,
-        this.grantedBy,
-        this.studentPicture});
+  {this.RollNumber,
+  this.StudentName,
+  this.Type,
+  this.Year,
+  this.section,
+  this.GrantedBy,
+  this.CreatedAt,
+
 
   Permission.fromJson(Map<String, dynamic> json) {
-    rollNo = json['rollNo'];
-    name = json['name'];
-    permissionStatus = json['permissionStatus'];
-    year = json['year'];
-    section = json['section'];
-    grantedBy = json['grantedBy'];
-    studentPicture = json['studentPicture'];
+  RollNumber = json['RollNumber'];
+  StudentName = json['StudentName'];
+  Type = json['Type'];
+  Year = json['Year'];
+  section = json['section'];
+  GrantedBy = json['GrantedBy'];
+  CreatedAt = json['CreatedAt'];
+
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['rollNo'] = this.rollNo;
-    data['name'] = this.name;
-    data['permissionStatus'] = this.permissionStatus;
-    data['year'] = this.year;
+    data['RollNumber'] = this.RollNumber;
+    data['StudentName'] = this.StudentName;
+    data['Type'] = this.Type;
+    data['Year'] = this.Year;
     data['section'] = this.section;
-    data['grantedBy'] = this.grantedBy;
-    data['studentPicture'] = this.studentPicture;
+    data['GrantedBy'] = this.GrantedBy;
+    data['CreatedAt'] = this.CreatedAt;
+
     return data;
   }
 }
 
 class Student {
-  String? rollNo;
-  String? name;
-  int? year;
+  String? RollNumber;
+  String? StudentName;
+  int? Year;
   String? section;
 
   Student(
-      {this.rollNo,
-        this.name,
-        this.year,
+      {this.RollNumber,
+        this.StudentName,
+        this.Year,
         this.section,});
 
   Student.fromJson(Map<String, dynamic> json) {
-    rollNo = json['rollNo'];
-    name = json['name'];
-    year = json['year'];
+    RollNumber = json['RollNumber'];
+    StudentName = json['StudentName'];
+    Year = json['Year'];
     section = json['section'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['rollNo'] = this.rollNo;
-    data['name'] = this.name;
-    data['year'] = this.year;
+    data['RollNumber'] = this.RollNumber;
+    data['StudentName'] = this.StudentName;
+    data['Year'] = this.Year;
     data['section'] = this.section;
     return data;
   }
