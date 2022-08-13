@@ -21,10 +21,42 @@ class _PermissionFetcherState extends State<PermissionFetcher> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getDocument();
+    /*getDocument();*/
+    fetchData();
   }
 
-  Future getDocument() async{
+  // testing..
+   String studentName = "error";
+  bool dataRetrieved = false;
+  
+  CollectionReference users = FirebaseFirestore.instance.collection('permissions');
+  Future<void>fetchData()async{
+    QuerySnapshot obj = await users
+        .where("RollNumber",isEqualTo: widget.scannedRollNo)
+        .get();
+
+    //  print(obj.docs.length);
+    if(obj.docs.length > 0){
+      // print(obj.docs.first["StudentName"]);
+      // print(rollNumber);
+      studentName = obj.docs.first["StudentName"];
+      //  print(studentName);
+      //  print(rollNumber);
+      //  print(url);
+      print("Received data: "+studentName);
+      dataRetrieved = true;
+      setState(() {});
+
+    }
+    else{
+      print("Unable to get the data");
+      dataRetrieved = false;
+    }
+
+  }
+  // testing code ends here..
+
+  /*Future getDocument() async{
     await FirebaseFirestore.instance.collection("permissions").where("RollNumber", isEqualTo: widget.scannedRollNo).get()
         .then(
             (snapshot) => snapshot.docs.forEach((document) {
@@ -33,26 +65,16 @@ class _PermissionFetcherState extends State<PermissionFetcher> {
           print(document.data());
         })
     );
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(body: Container(
       child: Center(
-        child: FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
-            builder: (context, snapshot) {
-              if (snapshot.hasError)
-                return Text("Error occured! ${snapshot.error}");
-              else if (snapshot.hasData) {
-                return Container();
-              } else {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            }),
+        child: Text("Student Name: "+studentName)
+        )
       ),
-    ));
+    );
   }
 
 

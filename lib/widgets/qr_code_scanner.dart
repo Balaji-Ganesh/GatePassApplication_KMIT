@@ -62,14 +62,11 @@ class _QRCodeScannerState extends State<QRCodeScanner>{
           if(regExp.hasMatch(_scanResults!)) {  // once a valid rollno found..
             _scannerController.stop();                  // stop scanning
 
-
-
-
             Navigator.push (
                 context,
                 MaterialPageRoute(
-                  //builder: (context) => PermissionValidator(scannedRollNo: _scanResults!),
-                  builder: (context) => PermissionFetcher(scannedRollNo: _scanResults!),
+                  builder: (context) => PermissionValidator(scannedRollNo: _scanResults!),
+                  //builder: (context) => PermissionFetcher(scannedRollNo: _scanResults!),
               ));
 
             // setup the things again..
@@ -82,6 +79,7 @@ class _QRCodeScannerState extends State<QRCodeScanner>{
       },
     );
   }
+
   Future getDocument() async{
     await FirebaseFirestore.instance.collection("permissions").where("RollNumber", isEqualTo: _scanResults).get()
         .then(
