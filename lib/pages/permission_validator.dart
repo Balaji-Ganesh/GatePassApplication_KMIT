@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:rakshak/model/permission.dart';
 import 'package:rakshak/utils/middleware.dart';
 import 'package:flutter/material.dart';
@@ -11,17 +12,77 @@ class PermissionValidator extends StatefulWidget {
   _PermissionValidatorState createState() => _PermissionValidatorState();
 }
 
+enum Status{PENDING, ERROR, FETCH_SUCCESS}
+
 class _PermissionValidatorState extends State<PermissionValidator> {
   bool permissionStatus = false, foundPermission = false;
+  var dataRetrievalStatus = Status.PENDING;
+  //Permission fetchedPermission = Permission();
+  String studentName="", studentPicture="";
+  int type=-1, year=1;
 
   @override
   void initState() {
-    super.initState();/**/
+    super.initState();
+    fetchData();
   }
 
-  @override
-  Widget build(BuildContext context) {
+  // testing..
 
+  CollectionReference permissions = FirebaseFirestore.instance.collection('permissions');
+  Future<void>fetchData()async{
+    QuerySnapshot obj = await permissions
+        .where("RollNumber",isEqualTo: widget.scannedRollNo)  // get the data of the passed rollno.
+        .get();
+    String studentImgPath = 'images/${widget.scannedRollNo}.png';
+    String templateImgUrl = "https://firebasestorage.googleapis.com/v0/b/gatepass-b7114.appspot.com/o/images%2Fno_name.png?alt=media&token=9133eee3-020f-40c6-9d99-a3c521b235d0";
+    String? downloadUrl;
+
+    print("In function body");
+
+    //  print(obj.docs.length);
+    if(obj.docs.length > 0){
+      studentName = obj.docs.first["StudentName"] ?? "NAME"; //fetchedPermission.StudentName = obj.docs.first["StudentName"] ?? "NAME";
+      print("Fetched name: "+studentName);
+      //fetchedPermission.RollNumber = obj.docs.first["RollNumber"] ?? "RollNum";
+      type = obj.docs.first["Type"]; //fetchedPermission.Type = obj.docs.first["Type"];
+      //downloadUrl = await FirebaseStorage.instance.ref().child(studentImgPath).getDownloadURL();
+      //if(downloadUrl != null)     // if found the image of the student, show that
+      //  fetchedPermission.studentPicture = downloadUrl;
+      //else                        // else, show the template image..
+        studentPicture = templateImgUrl; //fetchedPermission.studentPicture = templateImgUrl;
+
+      print("Received data: "+studentName);
+      dataRetrievalStatus = Status.FETCH_SUCCESS;
+    }
+    else{
+      print("Unable to get the data");
+      dataRetrievalStatus = Status.ERROR;
+      studentPicture = templateImgUrl;//fetchedPermission.studentPicture = templateImgUrl;
+    }
+    print("[STATUS]"+dataRetrievalStatus.toString());
+    print("hello from function body");
+    setState(() {});
+  }
+  // testing code ends here..
+
+  @override
+  Widget build(BuildContext context){
+    debugPrint("At building the widget: "+dataRetrievalStatus.toString());
+    return Scaffold(
+      body: Center(
+        child: dataRetrievalStatus == Status.PENDING
+            ? CircularProgressIndicator()
+            : dataRetrievalStatus == Status.FETCH_SUCCESS
+              ? buildPermissionCard(true, widget.scannedRollNo)
+              : buildPermissionCard(false, "rollnum" ) // with dummy permission
+      ),
+    );
+  }
+
+  // currently, this method is of no use
+  /*
+  Widget builderWithFB(BuildContext context) {
     return Scaffold(
     //     appBar: AppBar(title: Text("Firebase Rakshak tests")),
     //    body: Center(
@@ -44,7 +105,7 @@ class _PermissionValidatorState extends State<PermissionValidator> {
                 //print(documentSnapshot['RollNumber'].toString());
                 if (permissions != null && permissions.isNotEmpty) {
                   Permission permission = Permission.fromJson(permissions[0].data());
-                  return Center(child: Text("year ${permission.year}"),);
+                  return Center(child: Text("year ${permission.Year}"),);
                 }
                 else{
                   return Center(child: Text("else"),);
@@ -52,13 +113,12 @@ class _PermissionValidatorState extends State<PermissionValidator> {
               }
               return const Center(child: CircularProgressIndicator());
             }));//);
-  }
+  }*/
   // testing..
 
-  // testing..
-
-  Widget buildPermissionCard(Permission permission, bool hasData, String rollNo) {
-    debugPrint("At building the UI: $permission");
+  //Widget buildPermissionCard(Permission permission, bool hasData, String rollNo) {
+  Widget buildPermissionCard(bool hasData, String rollNo) {
+    //debugPrint("At building the UI: $permission");
     return Container(
       color: Colors.orange[100],
       child: Center(
@@ -92,8 +152,8 @@ class _PermissionValidatorState extends State<PermissionValidator> {
                   const SizedBox(height: 12),
                   // for profile.. and decisions..
                   hasData
-                      ? buildProfileAndDecisionViews(context, permission)
-                      : buildStudentNotFound(context, rollNo),
+                      ? buildProfileAndDecisionViews(context) // ? buildProfileAndDecisionViews(context, permission)
+                      : buildStudentNotFound(context, widget.scannedRollNo), // : buildStudentNotFound(context, rollNo),
 
                   const SizedBox(height: 10),
                   // a button - that closes this widget
@@ -125,14 +185,15 @@ class _PermissionValidatorState extends State<PermissionValidator> {
     );
   }
 
-  Widget buildProfileAndDecisionViews(
-      BuildContext context, Permission permission) {
+  //Widget buildProfileAndDecisionViews(BuildContext context, Permission permission) {
+  Widget buildProfileAndDecisionViews(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          buildProfileViewer(context, permission),
+          //buildProfileViewer(context, permission),
+          buildProfileViewer(context), // buildProfileViewer(context, permission),
           const SizedBox(
             height: 10,
           ),
@@ -144,7 +205,8 @@ class _PermissionValidatorState extends State<PermissionValidator> {
           const SizedBox(
             height: 5,
           ),
-          buildPermissionDecision(context, permission)
+          //buildPermissionDecision(context, permission)
+          buildPermissionDecision(context)
         ],
       ),
     );
@@ -181,7 +243,8 @@ class _PermissionValidatorState extends State<PermissionValidator> {
     );
   }
 
-  Widget buildProfileViewer(BuildContext context, Permission permission) {
+  //Widget buildProfileViewer(BuildContext context, Permission permission) {
+  Widget buildProfileViewer(BuildContext context) {
     var studyYears = {1: "I", 2: "II", 3: "III", 4: "IV"};
     return Column(
       children: [
@@ -194,31 +257,32 @@ class _PermissionValidatorState extends State<PermissionValidator> {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
-                  image: NetworkImage(permission.studentPicture!),
+                  image: NetworkImage(studentPicture),
                   fit: BoxFit.cover)),
         ),
         SizedBox(
           height: 10,
         ),
         Text(
-          permission.rollNo!.toUpperCase(),
+          //permission.RollNumber!.toUpperCase(), // permission.RollNumber!.toUpperCase(),
+          widget.scannedRollNo.toUpperCase(),
           style: const TextStyle(
               fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blue),
         ),
         Text(
-          permission.name!,
+          studentName,// permission.StudentName!,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
         ),
-        Text(studyYears[permission.year!].toString() +
-            " year CSE " +
-            permission.section!),
+        //Text(studyYears[permission.Year!].toString() + " year"),
+        Text(studyYears[year].toString() + " year"),
       ],
     );
   }
 
-  Widget buildPermissionDecision(BuildContext context, Permission permission) {
+  //Widget buildPermissionDecision(BuildContext context, Permission permission) {
+  Widget buildPermissionDecision(BuildContext context) {
     String passType = "", permissionBadge = "", decisionText = "";
-    switch (permission.permissionStatus) {
+    switch (type) {// switch (permission.Type) {
       case 0:
         passType = "Lunch Pass";
         decisionText = "ALLOW";
@@ -293,7 +357,7 @@ class _PermissionValidatorState extends State<PermissionValidator> {
               const SizedBox(
                 height: 40,
               ),
-              Text("Name: ${permission.name!}"),
+              Text("Name: ${permission.StudentName!}"),
             ],
           ),
         ),

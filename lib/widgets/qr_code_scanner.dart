@@ -79,7 +79,7 @@ class _QRCodeScannerState extends State<QRCodeScanner>{
       },
     );
   }
-
+/*
   Future getDocument() async{
     await FirebaseFirestore.instance.collection("permissions").where("RollNumber", isEqualTo: _scanResults).get()
         .then(
@@ -89,7 +89,7 @@ class _QRCodeScannerState extends State<QRCodeScanner>{
           print(document.data());
         })
     );
-  }
+  }*/
   @override
   Widget buildShowScanResult(BuildContext context){
     String firstFilterStatus = " - Invalid Rollno detected";
@@ -126,7 +126,7 @@ class _QRCodeScannerState extends State<QRCodeScanner>{
     ));
   }
 
-  // Widgetts..
+  // Widgets..
   @override
   Widget buildShowControlButtons(BuildContext context){
     return Container(
