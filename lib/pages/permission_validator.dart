@@ -89,7 +89,6 @@ class _PermissionValidatorState extends State<PermissionValidator> {
     }
     // STEP-2: If gatepass, change Type from 1 to -1. (i.e., simply negate it)
     else if (type == 0) { // if lunch pass..
-      //(Still in Idea stage) STEP-3: If its lunch pass, in another attribute, -- guess need to store the "scannedAt" and compare with the next scan time. -- if on same day, set it to valid else not.
       // if scanning for the first time (i.e., before going out) .. make it false..
       if(snapshot.docs.first["nextUseStatus"] == true) { // if its valid..
         await permissions.doc(snapshot.docs.first.id).update({
@@ -98,7 +97,7 @@ class _PermissionValidatorState extends State<PermissionValidator> {
         }); // update the value..
       }
       // if scanning second time.. (i.e., after lunch, coming back to college) -- make it true (for next day usage)
-      else if(snapshot.docs.first["nextUseStatus"] == false)
+      else if(snapshot.docs.first["nextUseStatus"] == false && scannedAt?.difference(DateTime.now()).inDays == 0) // came after lunch - (using it properly))
         permissions.doc(snapshot.docs.first.id).update({"nextUseStatus": true}); // update the value..
     }
   }
@@ -324,9 +323,8 @@ class _PermissionValidatorState extends State<PermissionValidator> {
       case 0:
         print("[INFO] Lunch pass");
         // control comes here: When student with the lunch pass uses
-        //   1. for the first time since issue
-        //   2. already used lunch pass before.. (and can use, as he/she used it properly)
-        //   3. came after lunch - (using it properly)
+        //   1. came before lunch -- if valid allow..
+        //   2. came after lunch - (using it properly)
         if( nextUseStatus == true         // if field is valid.. allow
           || (nextUseStatus == false && scannedAt?.difference(DateTime.now()).inDays == 0) // came after lunch - (using it properly)
         ) { // if either field not exists (due to no insertion at issue time) or that field is valid.. allow
