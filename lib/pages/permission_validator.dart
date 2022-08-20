@@ -64,8 +64,25 @@ class _PermissionValidatorState extends State<PermissionValidator> {
       studentPicture = templateImgUrl;//fetchedPermission.studentPicture = templateImgUrl;
     }
     print("[STATUS]"+dataRetrievalStatus.toString());
-    print("hello from function body");
     setState(() {});
+
+    // call for updation..
+    updatePermission(obj.docs.first.id);
+  }
+
+  Future<void> updatePermission(docId)async{
+    //DocumentSnapshot documentSnapshot = permissions.where("RollNumber",isEqualTo: widget.scannedRollNo).get() as DocumentSnapshot<Object?>;
+
+   print("[INFO] Received Id for updation "+docId);
+    // Updates the permission of the student after scan.
+    // STEP-1: Determine the permission type
+    if(type == 1) { // if gate pass
+      //await permissions.where("RollNumber",isEqualTo: widget.scannedRollNo)  // get the data of the passed rollno.
+      permissions.doc(docId).update({"Type": -1});
+      print("about to update the gate pass permission");
+    }
+    // STEP-2: If gatepass, change Type from 1 to -1. (i.e., simply negate it)
+    //(Still in Idea stage) STEP-3: If its lunch pass, in another attribute, -- guess need to store the "scannedAt" and compare with the next scan time. -- if on same day, set it to valid else not.
   }
   // testing code ends here..
 
