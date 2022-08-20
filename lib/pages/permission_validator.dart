@@ -34,7 +34,7 @@ class _PermissionValidatorState extends State<PermissionValidator> {
     QuerySnapshot obj = await permissions
         .where("RollNumber",isEqualTo: widget.scannedRollNo)  // get the data of the passed rollno.
         .get();
-    String studentImgPath = 'images/${widget.scannedRollNo}.png';
+    String studentImgPath = 'images/${widget.scannedRollNo}';
     String templateImgUrl = "https://firebasestorage.googleapis.com/v0/b/gatepass-b7114.appspot.com/o/images%2Fno_name.png?alt=media&token=9133eee3-020f-40c6-9d99-a3c521b235d0";
     String? downloadUrl;
 
@@ -46,11 +46,20 @@ class _PermissionValidatorState extends State<PermissionValidator> {
       print("Fetched name: "+studentName);
       //fetchedPermission.RollNumber = obj.docs.first["RollNumber"] ?? "RollNum";
       type = obj.docs.first["Type"]; //fetchedPermission.Type = obj.docs.first["Type"];
-      //downloadUrl = await FirebaseStorage.instance.ref().child(studentImgPath).getDownloadURL();
+      // Get the image of the respective student.. if not available, take template image.
+      try{
+        studentPicture = await FirebaseStorage.instance.ref().child(studentImgPath).getDownloadURL();  // No exception, if found
+      }on FirebaseException catch (exception){
+        print("[INFO] No image found with the student rollno.");
+        studentPicture = templateImgUrl; // Will get exception, if no such photo with given name found. Then take template image.
+      }catch (error){
+        print("[ERROR] An error occured: "+error.toString());
+      }
+
       //if(downloadUrl != null)     // if found the image of the student, show that
       //  fetchedPermission.studentPicture = downloadUrl;
       //else                        // else, show the template image..
-        studentPicture = templateImgUrl; //fetchedPermission.studentPicture = templateImgUrl;
+      //  studentPicture = templateImgUrl; //fetchedPermission.studentPicture = templateImgUrl;
 
       print("Received data: "+studentName);
       dataRetrievalStatus = Status.FETCH_SUCCESS;
