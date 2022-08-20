@@ -91,8 +91,7 @@ class _PermissionValidatorState extends State<PermissionValidator> {
     else if (type == 0) { // if lunch pass..
       //(Still in Idea stage) STEP-3: If its lunch pass, in another attribute, -- guess need to store the "scannedAt" and compare with the next scan time. -- if on same day, set it to valid else not.
       // if scanning for the first time (i.e., before going out) .. make it false..
-      if(snapshot.docs.first["nextUseStatus"] == null || // if no such field exists already..
-          snapshot.docs.first["nextUseStatus"] == true) { // if that field exists, and its valid..
+      if(snapshot.docs.first["nextUseStatus"] == true) { // if its valid..
         await permissions.doc(snapshot.docs.first.id).update({
           "scannedAt":DateTime.now(),
           "nextUseStatus": false
@@ -328,7 +327,7 @@ class _PermissionValidatorState extends State<PermissionValidator> {
         //   1. for the first time since issue
         //   2. already used lunch pass before.. (and can use, as he/she used it properly)
         //   3. came after lunch - (using it properly)
-        if(nextUseStatus == null || nextUseStatus == true         // if either field not exists (due to no insertion at issue time) or that field is valid.. allow
+        if( nextUseStatus == true         // if field is valid.. allow
           || (nextUseStatus == false && scannedAt?.difference(DateTime.now()).inDays == 0) // came after lunch - (using it properly)
         ) { // if either field not exists (due to no insertion at issue time) or that field is valid.. allow
           passType = "Lunch Pass";
