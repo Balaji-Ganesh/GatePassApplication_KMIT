@@ -43,9 +43,8 @@ class _PermissionValidatorState extends State<PermissionValidator> {
     //  print(obj.docs.length);
     if(obj.docs.length > 0){
       studentName = obj.docs.first["StudentName"] ?? "NAME"; //fetchedPermission.StudentName = obj.docs.first["StudentName"] ?? "NAME";
-      print("Fetched name: "+studentName);
-      //fetchedPermission.RollNumber = obj.docs.first["RollNumber"] ?? "RollNum";
       type = obj.docs.first["Type"]; //fetchedPermission.Type = obj.docs.first["Type"];
+
       // Get the image of the respective student.. if not available, take template image.
       try{
         studentPicture = await FirebaseStorage.instance.ref().child(studentImgPath).getDownloadURL();  // No exception, if found
@@ -56,12 +55,7 @@ class _PermissionValidatorState extends State<PermissionValidator> {
         print("[ERROR] An error occured: "+error.toString());
       }
 
-      //if(downloadUrl != null)     // if found the image of the student, show that
-      //  fetchedPermission.studentPicture = downloadUrl;
-      //else                        // else, show the template image..
-      //  studentPicture = templateImgUrl; //fetchedPermission.studentPicture = templateImgUrl;
-
-      print("Received data: "+studentName);
+      // update the retrieval status.
       dataRetrievalStatus = Status.FETCH_SUCCESS;
     }
     else{
