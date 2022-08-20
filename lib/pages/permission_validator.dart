@@ -20,6 +20,8 @@ class _PermissionValidatorState extends State<PermissionValidator> {
   //Permission fetchedPermission = Permission();
   String studentName="", studentPicture="";
   int type=-1, year=1;
+  bool? nextUseStatus;
+  DateTime? scannedAt;
 
   @override
   void initState() {
@@ -44,6 +46,10 @@ class _PermissionValidatorState extends State<PermissionValidator> {
     if(obj.docs.length > 0){
       studentName = obj.docs.first["StudentName"] ?? "NAME"; //fetchedPermission.StudentName = obj.docs.first["StudentName"] ?? "NAME";
       type = obj.docs.first["Type"]; //fetchedPermission.Type = obj.docs.first["Type"];
+      nextUseStatus = obj.docs.first["nextUseStatus"];
+      print("[INFO] time scanned "+obj.docs.first["scannedAt"].toString());
+      Timestamp timestamp = obj.docs.first["scannedAt"];
+      scannedAt = DateTime.parse(timestamp.toDate().toString());
 
       // Get the image of the respective student.. if not available, take template image.
       try{
@@ -67,22 +73,35 @@ class _PermissionValidatorState extends State<PermissionValidator> {
     setState(() {});
 
     // call for updation..
-    updatePermission(obj.docs.first.id);
+    updatePermission(obj);
   }
 
-  Future<void> updatePermission(docId)async{
+  Future<void> updatePermission(QuerySnapshot snapshot)async{
     //DocumentSnapshot documentSnapshot = permissions.where("RollNumber",isEqualTo: widget.scannedRollNo).get() as DocumentSnapshot<Object?>;
 
-   print("[INFO] Received Id for updation "+docId);
+   print("[INFO] Received Id for updation "+snapshot.docs.first.id);
     // Updates the permission of the student after scan.
     // STEP-1: Determine the permission type
     if(type == 1) { // if gate pass
       //await permissions.where("RollNumber",isEqualTo: widget.scannedRollNo)  // get the data of the passed rollno.
-      permissions.doc(docId).update({"Type": -1});
+      await permissions.doc(snapshot.docs.first.id).update({"Type": -1});
       print("about to update the gate pass permission");
     }
     // STEP-2: If gatepass, change Type from 1 to -1. (i.e., simply negate it)
-    //(Still in Idea stage) STEP-3: If its lunch pass, in another attribute, -- guess need to store the "scannedAt" and compare with the next scan time. -- if on same day, set it to valid else not.
+    else if (type == 0) { // if lunch pass..
+      //(Still in Idea stage) STEP-3: If its lunch pass, in another attribute, -- guess need to store the "scannedAt" and compare with the next scan time. -- if on same day, set it to valid else not.
+      // if scanning for the first time (i.e., before going out) .. make it false..
+      if(snapshot.docs.first["nextUseStatus"] == null || // if no such field exists already..
+          snapshot.docs.first["nextUseStatus"] == true) { // if that field exists, and its valid..
+        await permissions.doc(snapshot.docs.first.id).update({
+          "scannedAt":DateTime.now(),
+          "nextUseStatus": false
+        }); // update the value..
+      }
+      // if scanning second time.. (i.e., after lunch, coming back to college) -- make it true (for next day usage)
+      else if(snapshot.docs.first["nextUseStatus"] == false)
+        permissions.doc(snapshot.docs.first.id).update({"nextUseStatus": true}); // update the value..
+    }
   }
   // testing code ends here..
 
@@ -304,10 +323,30 @@ class _PermissionValidatorState extends State<PermissionValidator> {
     String passType = "", permissionBadge = "", decisionText = "";
     switch (type) {// switch (permission.Type) {
       case 0:
-        passType = "Lunch Pass";
-        decisionText = "ALLOW";
-        permissionBadge =
-        "https://cdn-icons-png.flaticon.com/512/6785/6785304.png";
+        print("[INFO] Lunch pass");
+        // control comes here: When student with the lunch pass uses
+        //   1. for the first time since issue
+        //   2. already used lunch pass before.. (and can use, as he/she used it properly)
+        //   3. came after lunch - (using it properly)
+        if(nextUseStatus == null || nextUseStatus == true         // if either field not exists (due to no insertion at issue time) or that field is valid.. allow
+          || (nextUseStatus == false && scannedAt?.difference(DateTime.now()).inDays == 0) // came after lunch - (using it properly)
+        ) { // if either field not exists (due to no insertion at issue time) or that field is valid.. allow
+          passType = "Lunch Pass";
+          decisionText = "ALLOW";
+          permissionBadge =
+          "https://cdn-icons-png.flaticon.com/512/6785/6785304.png";
+          //Timestamp.
+        }
+        // control comes here: When the student with lunch pass
+        //  1. hasn't used it properly (didn't came after lunch)
+        else{
+          // for misuse.. previous scanned date and current scanned date won't be same
+          if(scannedAt?.difference(DateTime.now()).inDays != 0) {
+            passType = "MIS-USED Lunch pass";
+            decisionText = "DENY";
+            permissionBadge = "https://cdn-icons-png.flaticon.com/512/5978/5978441.png";
+          }
+        }
         break;
       case 1:
         passType = "Gate Pass";
