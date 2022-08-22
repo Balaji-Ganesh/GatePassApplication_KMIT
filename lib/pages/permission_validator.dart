@@ -15,7 +15,7 @@ class PermissionValidator extends StatefulWidget {
 enum Status{PENDING, ERROR, FETCH_SUCCESS}
 
 class _PermissionValidatorState extends State<PermissionValidator> {
-  bool permissionStatus = false, foundPermission = false;
+  bool foundPermission = false;
   var dataRetrievalStatus = Status.PENDING;
   //Permission fetchedPermission = Permission();
   String studentName="", studentPicture="";
