@@ -20,7 +20,7 @@ class _PermissionValidatorState extends State<PermissionValidator> {
   //Permission fetchedPermission = Permission();
   String studentName="", studentPicture="";
   int type=-1, year=1;
-  bool? nextUseStatus;
+  bool? permissionStatus;
   DateTime? scannedAt;
 
   @override
@@ -46,7 +46,7 @@ class _PermissionValidatorState extends State<PermissionValidator> {
     if(obj.docs.length > 0){
       studentName = obj.docs.first["StudentName"] ?? "NAME"; //fetchedPermission.StudentName = obj.docs.first["StudentName"] ?? "NAME";
       type = obj.docs.first["Type"]; //fetchedPermission.Type = obj.docs.first["Type"];
-      nextUseStatus = obj.docs.first["nextUseStatus"];
+      permissionStatus = obj.docs.first["permissionStatus"];
       print("[INFO] time scanned "+obj.docs.first["scannedAt"].toString());
       Timestamp timestamp = obj.docs.first["scannedAt"];
       scannedAt = DateTime.parse(timestamp.toDate().toString());
@@ -90,15 +90,15 @@ class _PermissionValidatorState extends State<PermissionValidator> {
     // STEP-2: If gatepass, change Type from 1 to -1. (i.e., simply negate it)
     else if (type == 0) { // if lunch pass..
       // if scanning for the first time (i.e., before going out) .. make it false..
-      if(snapshot.docs.first["nextUseStatus"] == true) { // if its valid..
+      if(snapshot.docs.first["permissionStatus"] == true) { // if its valid..
         await permissions.doc(snapshot.docs.first.id).update({
           "scannedAt":DateTime.now(),
-          "nextUseStatus": false
+          "permissionStatus": false
         }); // update the value..
       }
       // if scanning second time.. (i.e., after lunch, coming back to college) -- make it true (for next day usage)
-      else if(snapshot.docs.first["nextUseStatus"] == false && scannedAt?.difference(DateTime.now()).inDays == 0) // came after lunch - (using it properly))
-        permissions.doc(snapshot.docs.first.id).update({"nextUseStatus": true}); // update the value..
+      else if(snapshot.docs.first["permissionStatus"] == false && scannedAt?.difference(DateTime.now()).inDays == 0) // came after lunch - (using it properly))
+        permissions.doc(snapshot.docs.first.id).update({"permissionStatus": true}); // update the value..
     }
   }
   // testing code ends here..
@@ -325,8 +325,8 @@ class _PermissionValidatorState extends State<PermissionValidator> {
         // control comes here: When student with the lunch pass uses
         //   1. came before lunch -- if valid allow..
         //   2. came after lunch - (using it properly)
-        if( nextUseStatus == true         // if field is valid.. allow
-          || (nextUseStatus == false && scannedAt?.difference(DateTime.now()).inDays == 0) // came after lunch - (using it properly)
+        if( permissionStatus == true         // if field is valid.. allow
+          || (permissionStatus == false && scannedAt?.difference(DateTime.now()).inDays == 0) // came after lunch - (using it properly)
         ) { // if either field not exists (due to no insertion at issue time) or that field is valid.. allow
           passType = "Lunch Pass";
           decisionText = "ALLOW";
