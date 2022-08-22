@@ -8,13 +8,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rakshak/pages/home_page.dart';
 import 'package:rakshak/pages/authentication/phone_number_login.dart';
 import 'package:rakshak/utils/constants.dart';
+import 'package:flutter/services.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
 //  WidgetsFlutterBinding.ensureInitialized();
   Constants.sharedPrefs = await SharedPreferences.getInstance(); // Initializing here..
   await Firebase.initializeApp();
-  runApp(RakshakApp());
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(new RakshakApp());
+  });
 }
 
 class RakshakApp extends StatelessWidget {
