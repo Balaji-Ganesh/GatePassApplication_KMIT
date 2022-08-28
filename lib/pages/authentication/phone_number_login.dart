@@ -37,7 +37,7 @@ class _PhoneNumberLoginState extends State<PhoneNumberLogin> {
                   controller: _mobileNumumberController,
                   decoration: const InputDecoration(
                     labelText: 'Mobile number',
-                    hintText: "Please enter 10 mobile number",
+                    hintText: "Please enter 10 digits mobile number",
                     prefix: Padding(
                       padding: EdgeInsets.all(4),
                       child: Text("+91"),

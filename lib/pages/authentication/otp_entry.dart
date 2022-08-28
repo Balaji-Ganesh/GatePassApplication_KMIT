@@ -30,7 +30,7 @@ class _OTPEntryScreenState extends State<OTPEntryScreen> {
   @override
   void initState() {
     super.initState();
-    _verifyPhoneNumberBySendingOTP(); // calling this ate beg, because need to send OTP to that mobile number
+    _verifyPhoneNumberBySendingOTP(); // calling this at beg, because need to send OTP to that mobile number
   }
 
   @override
@@ -166,21 +166,26 @@ class _OTPEntryScreenState extends State<OTPEntryScreen> {
 
   Future _verifyPhoneNumberBySendingOTP() async {
     print("OTP sending");
-    auth.verifyPhoneNumber(
+    await auth.verifyPhoneNumber(
       phoneNumber: "+91${widget.mobileNumber}",
-      verificationCompleted: (PhoneAuthCredential credential) async { },
+      verificationCompleted: (PhoneAuthCredential credential) async { // This handler will only be called on Android devices which support automatic SMS code resolution.
+        // Sign the user in (or link) with the auto-generated credential
+        await auth.signInWithCredential(credential);
+
+      },
       verificationFailed: (FirebaseAuthException e) async {
         print(e.message);
       },
-      codeSent: (String verificationId, int? resendingToken) async {
+      codeSent: (String verificationId, int? resendingToken) async { // When Firebase sends an SMS code to the device, this handler is triggered with a `verificationId` and `resendToken`
+        // A note: A resendToken is only supported on Android devices, iOS devices will always return a null value.
         //otpVisibility = true;
         setState(() {
-          this._verificationID =
-              verificationId; // update with what firebase has sent.
+          this._verificationID = verificationId; // update with what firebase has sent.
         });
         //verificationID = verificationId;
       },
       codeAutoRetrievalTimeout: (String verificationId) async { },
+
     );
   }
 
