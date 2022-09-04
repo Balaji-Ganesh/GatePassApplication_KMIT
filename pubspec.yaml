@@ -55,7 +55,9 @@ dependencies:
 
   # for mobile number authentication
   firebase_auth: ^3.6.1
-  pinput: ^2.2.11
+  #pinput: ^2.2.11
+  intl_phone_number_input: ^0.7.0+2
+  pin_code_fields: ^7.2.0
 
   # for displaying short infos.
   fluttertoast: ^8.0.9

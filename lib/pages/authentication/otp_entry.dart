@@ -1,13 +1,18 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:pinput/pinput.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rakshak/pages/authentication/phone_number_login.dart';
 import 'package:rakshak/pages/home_page.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 
 import '../../utils/constants.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 
 class OTPEntryScreen extends StatefulWidget {
   String mobileNumber;
@@ -23,9 +28,9 @@ class _OTPEntryScreenState extends State<OTPEntryScreen> {
   late String _verificationCode;
 
   FirebaseAuth auth = FirebaseAuth.instance;
-  TextEditingController _otpEntryController = TextEditingController();
   String? _verificationID;
   var _status = Status.waiting;
+  String enteredOtp="";
 
   @override
   void initState() {
@@ -46,81 +51,64 @@ class _OTPEntryScreenState extends State<OTPEntryScreen> {
                 style:
                 const TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
               )),
-          //Visibility(child: child)
-          /*
-          Padding(
-            padding: const EdgeInsets.all(30),
-            child: Pinput(
-
-              length: 6,
-              defaultPinTheme: defaultPinTheme,
-              focusedPinTheme: focusedPinTheme,
-              submittedPinTheme: focusedPinTheme,
-              showCursor: true,
-
-              onCompleted: (pin) {
-                print("entered pin: " + pin);
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HomePage(greetings: 'greetings')));
-              },
-              controller: _otpEntryController,
-              pinAnimationType: PinAnimationType.fade,
-              //submittedPinTheme: PinTheme,
-              onSubmitted: (pin) async {
-                try {
-                  await FirebaseAuth.instance
-                      .signInWithCredential(PhoneAuthProvider.credential(
-                          verificationId: _verificationCode, smsCode: pin))
-                      .then((value) async {
-                    if (value.user != null) {
-
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  HomePage(greetings: 'greetings')),
-                          (route) => false);
-                    }
-                    else{
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(const SnackBar(content: Text("Opps..!!")));
-                    }
-                  });
-                } catch (e) {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text(e.toString())));
-                }
-              },
-              validator: (pin){
-                if(pin  != '123456') return null;
-                return 'Incorrect Pin';
-              },
-              errorText: 'hello',
-              pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
-            ),
-          )
-          */
           _status != Status.error ?
           Container(
             margin: const EdgeInsets.only(top: 40),
             padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              controller: _otpEntryController,
-              keyboardType: TextInputType.number,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                  letterSpacing: 30,
-                  fontSize: 30
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: PinCodeTextField(
+              //controller: _otpEntryController,
+              appContext: context,
+              pastedTextStyle: TextStyle(
+                color: Colors.green.shade600,
+                fontWeight: FontWeight.bold,
+                ),
+              length: 6,
+              obscureText: false,
+              pinTheme: PinTheme(
+                shape: PinCodeFieldShape.box,
+                borderRadius: BorderRadius.circular(8),
+                borderWidth: 0,
+                fieldHeight: 50,
+                fieldWidth: 40,
+                activeFillColor: Colors.white,
+                inactiveFillColor: Colors.white,
+                selectedFillColor: Colors.white,
+                activeColor: Colors.white,
               ),
-              maxLength: 6,
-              onChanged: (enteredPin) async {
-                print("Entered value: " + enteredPin);
-                if (enteredPin.length == 6) { // as soon as entered full OTP..
+              cursorColor: Colors.black,
+              //hintCharacter: '0',
+              hintStyle: TextStyle(color: const Color(0x36000000),),
+              animationType: AnimationType.fade,
+              animationDuration: const Duration(milliseconds: 300),
+              enableActiveFill: true,
+              keyboardType: TextInputType.number,
+              boxShadows: const [
+                BoxShadow(
+                  offset: Offset(0, 1),
+                  color: Colors.black12,
+                  blurRadius: 10,
+                )
+              ],
+              onChanged: (value) {
+                print("Entered value: " + value);
+                enteredOtp = value;
+                if (enteredOtp.length == 6) { // as soon as entered full OTP..
                   // perform auth..
                   print("Going for verification");
-                  _verifyOtpBySendingToFirebase(enteredCode: _otpEntryController.text);
+                  _verifyOtpBySendingToFirebase(enteredCode: enteredOtp);
                 }
+/*              setState(() {
+                  //currentText = value;
+                });*/
               },
-            ),
+              onCompleted: (value){
+                print("final value: "+value);
+                _verifyOtpBySendingToFirebase(enteredCode: value);
+
+              },),
+            )
           )
               : Container(
               margin: const EdgeInsets.only(top: 80),
@@ -167,7 +155,7 @@ class _OTPEntryScreenState extends State<OTPEntryScreen> {
   Future _verifyPhoneNumberBySendingOTP() async {
     print("OTP sending");
     await auth.verifyPhoneNumber(
-      phoneNumber: "+91${widget.mobileNumber}",
+      phoneNumber: widget.mobileNumber,
       verificationCompleted: (PhoneAuthCredential credential) async { // This handler will only be called on Android devices which support automatic SMS code resolution.
         // Sign the user in (or link) with the auto-generated credential
         await auth.signInWithCredential(credential);
@@ -214,7 +202,7 @@ class _OTPEntryScreenState extends State<OTPEntryScreen> {
           .whenComplete(() {})
           .onError((error, stackTrace) {
         setState(() {
-          _otpEntryController.text = "";
+          enteredOtp = "";
           this._status = Status.error;
         });
       });
