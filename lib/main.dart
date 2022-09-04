@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:rakshak/pages/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:easy_splash_screen/easy_splash_screen.dart';
 // local imports..
 import 'package:rakshak/pages/home_page.dart';
 import 'package:rakshak/pages/authentication/phone_number_login.dart';
 import 'package:rakshak/utils/constants.dart';
 import 'package:flutter/services.dart';
+
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,26 +19,57 @@ Future main() async {
   await Firebase.initializeApp();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
-    runApp(new RakshakApp());
+    runApp(new App());
   });
+}
+
+class App extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: SplashScreenApp(),
+      theme: ThemeData(
+          primarySwatch: Colors
+              .purple // Choose a primary color, we'll be getting different shades of it
+      ),
+    );
+  }
+}
+
+class SplashScreenApp extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return EasySplashScreen(
+      logo: Image.asset(
+          'images/rakshakLogo.png'),
+      logoWidth: 60,
+      title: Text(
+        "Rakshak",
+        style: TextStyle(
+          fontSize: 26,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      backgroundColor: Colors.grey.shade400,
+      showLoader: true,
+      loadingText: Text("© Gate Pass Application"),
+      loaderColor: Colors.blueGrey,
+      navigator: RakshakApp(),
+      durationInSeconds: 5,
+    );
+  }
 }
 
 class RakshakApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,       // remove the debug banner
-
+    return Scaffold(
       //home: HomePage(),
-      home: (Constants.sharedPrefs.getBool("isLoggedIn") ?? false) == true
+      body: (Constants.sharedPrefs.getBool("isLoggedIn") ?? false) == true
           ? HomePage()//RakshakTests()
           //? Testing()
           : PhoneNumberLogin(),
-      // Depending on the login status.. first screen will be decided.
-      theme: ThemeData(
-          primarySwatch: Colors
-              .purple // Choose a primary color, we'll be getting different shades of it
-      ),
       /*
       routes: {
         LoginPage.routeName: (context) => LoginPage(),

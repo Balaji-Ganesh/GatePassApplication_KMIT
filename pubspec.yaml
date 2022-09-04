@@ -62,6 +62,10 @@ dependencies:
   # for displaying short infos.
   fluttertoast: ^8.0.9
 
+  # for splash/launch screen
+  easy_splash_screen: ^1.0.4
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
