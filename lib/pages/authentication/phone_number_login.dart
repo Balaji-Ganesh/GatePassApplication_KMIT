@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rakshak/pages/authentication/otp_entry.dart';
+import 'package:rakshak/pages/authentication/verify_user.dart';
 
 class PhoneNumberLogin extends StatefulWidget {
   PhoneNumberLogin({Key? key}) : super(key: key);
@@ -64,7 +65,7 @@ class _PhoneNumberLoginState extends State<PhoneNumberLogin> {
                   else {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) =>
-                            OTPEntryScreen(
+                            VerifyUser(
                                 mobileNumber: _mobileNumumberController.text)));
                   }
                 },

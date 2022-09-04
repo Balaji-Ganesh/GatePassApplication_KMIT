@@ -153,7 +153,7 @@ class _OTPEntryScreenState extends State<OTPEntryScreen> {
               const Text("Would like to edit number?"),
               TextButton(
                   onPressed: () {
-                    Navigator.pop(context, MaterialPageRoute(builder: (context)=>PhoneNumberLogin()));
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>PhoneNumberLogin()));
                   },
                   child: const Text("Edit Mobile number")
               )
